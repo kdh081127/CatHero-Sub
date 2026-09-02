@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatHero LAB - DPS & Build Calculator</title>
+
+    <!-- 외부 커스텀 CSS 연결 -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body class="app-container">
+
+    <!-- 1. 상단 헤더 (Header) -->
+    <header class="header">
+        <div class="logo-group">
+            <div class="logo">
+                🐾 CatHero LAB
+            </div>
+            <div class="divider"></div>
+
+            <!-- 타깃 콘텐츠 글로벌 선택 -->
+            <div class="target-select-group">
+                <label for="global-target" class="target-label">Target:</label>
+                <select id="global-target" class="target-select">
+            <option value="upper_boss">격전지 상층 보스</option>
+            <option value="cthulhu">길드전 크툴루 레이드</option>
+            <option value="nocturne">녹턴의 시험</option>
+            <option value="blood_nocturne">블러드녹턴 레이드</option>
+            <option value="arena">아레나 (PVP)</option>
+          </select>
+            </div>
+        </div>
+
+        <!-- 상단 정보 페이지 탭 네비게이션 -->
+        <nav class="info-nav-bar">
+            <button class="info-nav-btn active" onclick="switchMainView('calculator')">🧮 DPS 계산기</button>
+            <button class="info-nav-btn" onclick="switchMainView('builds')">💡 빌드
+          도감</button>
+            <button class="info-nav-btn" onclick="switchMainView('skills')">⚡ 스킬
+          도감</button>
+            <button class="info-nav-btn" onclick="switchMainView('runes')">💎 룬
+          도감</button>
+            <button class="info-nav-btn" onclick="switchMainView('contents')">⚔️ 콘텐츠
+          공략</button>
+        </nav>
+
+        <!-- 헤더 우측 메뉴 (프리셋 퀵 컨트롤러 & 로그인) -->
+        <div class="header-user-menu">
+            <div class="preset-controller">
+                <span class="preset-icon">📁</span>
+                <select id="preset-quick-select" class="preset-select" onchange="applyPreset(this.value)">
+            <!-- js/preset.js에 의해 동적으로 채워집니다 -->
+          </select>
+
+                <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentPreset()" title="현재 세팅을 선택된 슬롯에 덮어쓰기">
+            💾 저장
+          </button>
+                <button type="button" class="btn-preset-action btn-preset-manage" onclick="togglePresetModal(true)" title="프리셋 목록 및 추가/삭제 관리">
+            📋 목록 관리
+          </button>
+            </div>
+
+            <button type="button" class="btn-login">로그인</button>
+        </div>
+    </header>
+
+    <!-- 상단 메인 뷰 전환 탭 (헤더 바로 아래 추가) -->
+    <nav class="info-nav-bar">
+        <button type="button" id="gnb-calculator" class="info-nav-btn active" onclick="switchMainView('calculator')">
+        🧮 DPS 계산기
+      </button>
+        <button type="button" id="gnb-runes" class="info-nav-btn" onclick="switchMainView('runes')">
+        💎 룬 도감
+      </button>
+        <!-- 추후 스킬, 빌드 도감 등 추가 영역 -->
+    </nav>
+
+    <!-- 메인 레이아웃 (사이드바 + 콘텐츠) -->
+    <div class="main-wrapper">
+
+        <!-- 2. 좌측 사이드바 (Sidebar Menu) -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Calculator Setup</div>
+
+            <button onclick="switchTab('tab-character')" id="btn-tab-character" class="tab-btn active">
+          <span>👤</span> 1. 캐릭터 & 전직
+        </button>
+
+            <button onclick="switchTab('tab-equipment')" id="btn-tab-equipment" class="tab-btn">
+          <span>⚔️</span> 2. 장비 & 대포
+        </button>
+
+            <button onclick="switchTab('tab-companions')" id="btn-tab-companions" class="tab-btn">
+          <span>🐱</span> 3. 동료 & 가디언
+        </button>
+
+            <button onclick="switchTab('tab-runes')" id="btn-tab-runes" class="tab-btn">
+          <span>💎</span> 4. 룬 & 냥혼석
+        </button>
+
+            <button onclick="switchTab('tab-skills')" id="btn-tab-skills" class="tab-btn">
+          <span>⚡</span> 5. 스킬 순서 & 딜레이
+        </button>
+        </aside>
+
+        <!-- 3. 메인 작업 영역 (Main Content Area) -->
+        <main class="content-area">
+            <div class="content-container">
+
+                <!-- 안내 문구 카드 -->
+                <div class="info-card">
+                    <span>💡 각 카테고리별 스탯을 입력한 후, 하단 <b>[시뮬레이션 실행]</b> 버튼을 누르면
+              계산됩니다.</span>
+                    <span class="info-version">v1.0.0-draft</span>
+                </div>
+
+                <!-- TAB 1: 캐릭터 & 전직 -->
+                <section id="tab-character" class="tab-content">
+                    <h2 class="section-title">
+                        👤 캐릭터 기본 스탯 및 전직 설정
+                    </h2>
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">전직 단계</label>
+                            <select class="form-select">
+                  <option value="novice">견습 (2초간 500%)</option>
+                  <option value="normal">일반 (3초간 2000%)</option>
+                  <option value="expert" selected>숙련된 (15초간 2000%)</option>
+                </select>
+                        </div>
+                        <div>
+                            <label class="form-label">생선 레벨</label>
+                            <input type="number" value="100" class="form-input">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 2: 장비 & 대포 (초기 숨김) -->
+                <section id="tab-equipment" class="tab-content hidden">
+                    <h2 class="section-title">
+                        ⚔️ 장비 및 대포 세팅
+                    </h2>
+                    <div class="form-grid">
+                        <div>
+                            <label class="form-label">장착 대포 등급</label>
+                            <select class="form-select">
+                  <option value="mythic">신화 (+505%공격력 증폭)</option>
+                  <option value="legend">전설 (+106%공격력 증폭)</option>
+                  <option value="epic">에픽 (+41%공격력 증폭)</option>
+                </select>
+                        </div>
+                        <div>
+                            <label class="form-label">대포 서브옵션 3줄</label>
+                            <input type="text" placeholder="예: 생선제작레벨, 동료피해" class="form-input">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: 동료 & 가디언 (초기 숨김) -->
+                <section id="tab-companions" class="tab-content hidden">
+                    <h2 class="section-title">
+                        🐱 동료, 탈것 및 가디언
+                    </h2>
+                    <p class="placeholder-text">동료 캐릭터 성급 및 가디언 버프 옵션 입력 창입니다.</p>
+                </section>
+
+                <!-- TAB 4: 룬 & 냥혼석 (초기 숨김) -->
+                <section id="tab-runes" class="tab-content hidden">
+                    <h2 class="section-title">
+                        💎 메인/서브 룬 및 냥혼석
+                    </h2>
+                    <p class="placeholder-text">냥혼석 강점(1~10강) 및 슬롯별 스킬 옵션 설정 영역입니다.</p>
+                </section>
+
+                <!-- TAB 5: 스킬 순서 & 딜레이 (초기 숨김) -->
+                <section id="tab-skills" class="tab-content hidden">
+                    <h2 class="section-title">
+                        ⚡ 스킬 순서 및 자동 스킬 딜레이
+                    </h2>
+                    <p class="placeholder-text">스킬 발동 순서 및 자동 스킬 딜레이(초) 설정 영역입니다.</p>
+                </section>
+
+                <!-- TAB: 룬 도감 (기존 tab-content들과 같은 위치에 추가) -->
+                <section id="view-runes" class="tab-content hidden">
+                    <div class="db-header">
+                        <h2 class="section-title">💎 룬 도감 (Rune Database)</h2>
+                        <p class="placeholder-text">메인/서브 룬의 등급별 효과 및 빌드별 추천 룬 정보를 확인하세요.
+                        </p>
+                    </div>
+
+                    <!-- 룬 필터 컨트롤러 -->
+                    <div class="db-filter-bar">
+                        <!-- 메인/서브 구분 필터 -->
+                        <div class="filter-group">
+                            <button class="filter-btn active" onclick="filterRunes('type', 'all')">전체</button>
+                            <button class="filter-btn" onclick="filterRunes('type', 'main')">메인 룬</button>
+                            <button class="filter-btn" onclick="filterRunes('type', 'sub')">서브 룬</button>
+                        </div>
+
+                        <!-- 등급 필터 (커먼 ~ 초월) -->
+                        <div class="filter-group">
+                            <select id="rune-grade-filter" class="form-select" style="width: auto;" onchange="filterRunes('grade', this.value)">
+                  <option value="all">모든 등급 보기</option>
+                  <option value="common">커먼 (Common)</option>
+                  <option value="uncommon">언커먼 (Uncommon)</option>
+                  <option value="rare">레어 (Rare)</option>
+                  <option value="epic">에픽 (Epic)</option>
+                  <option value="legend">전설 (Legend)</option>
+                  <option value="mythic">신화 (Mythic)</option>
+                  <option value="transcendent">초월 (Transcendent)</option>
+                </select>
+                        </div>
+                    </div>
+
+                    <!-- 룬 카드 리스트 출력 영역 -->
+                    <div id="rune-card-grid" class="rune-grid">
+                        <!-- js/rune-db.js에 의해 동적으로 렌더링됩니다 -->
+                    </div>
+                </section>
+
+                <!-- 하단 대형 시뮬레이션 버튼 -->
+                <button class="btn-submit">
+            🚀 DPS 시뮬레이션 실행 및 결과 보기
+          </button>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 프리셋 목록 관리 모달 -->
+    <div id="preset-modal" class="modal-backdrop hidden" onclick="if(event.target === this) togglePresetModal(false)">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">📋 프리셋 목록 관리</h3>
+                <button type="button" class="modal-close-btn" onclick="togglePresetModal(false)">✕</button>
+            </div>
+
+            <!-- 신규 프리셋 생성 입력바 -->
+            <div class="preset-add-bar">
+                <input type="text" id="preset-new-name" class="form-input" placeholder="새 프리셋 이름 입력 (예: PVP 전용)" />
+                <button type="button" class="btn-preset-action btn-preset-save" onclick="createNewPresetFromInput()">
+            ➕ 새 프리셋 추가
+          </button>
+            </div>
+
+            <div class="modal-divider"></div>
+
+            <!-- 프리셋 리스트 영역 -->
+            <div id="preset-modal-list" class="preset-list"></div>
+        </div>
+    </div>
+
+    <!-- 외부 자바스크립트 연결 -->
+    <script src="js/main.js"></script>
+    <script src="js/preset.js"></script>
+</body>
+
+</html>
