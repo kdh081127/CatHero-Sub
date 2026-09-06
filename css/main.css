@@ -4,6 +4,10 @@
    1. 기본 설정 및 스크롤바
    ========================================================================== */
 
+html {
+    scroll-behavior: smooth;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -287,63 +291,12 @@
 
 
 /* ==========================================================================
-   4. 메인 바디 & 사이드바 (Sidebar)
+   4. 메인 바디 (사이드바 없이 단일 컬럼)
    ========================================================================== */
 
 .main-wrapper {
     display: flex;
     flex: 1 1 0%;
-}
-
-.sidebar {
-    width: 16rem;
-    background-color: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex-shrink: 0;
-}
-
-.sidebar-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #94a3b8;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.tab-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    transition: all 0.15s ease;
-    color: #475569;
-    text-align: left;
-    background: none;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-
-.tab-btn:hover {
-    background-color: #f8fafc;
-    color: #0f172a;
-}
-
-.tab-btn.active {
-    background-color: #fffbeb;
-    color: #b45309;
-    border: 1px solid #fde68a;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 
@@ -355,10 +308,11 @@
     flex: 1 1 0%;
     padding: 2rem;
     overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 .content-container {
-    max-width: 56rem;
+    max-width: 64rem;
     margin-left: auto;
     margin-right: auto;
     display: flex;
@@ -384,6 +338,41 @@
     color: #94a3b8;
 }
 
+
+/* 섹션 빠른 이동 네비게이션 (사이드바를 없앤 대신 상단에 배치) */
+
+.section-jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    position: sticky;
+    top: 0.5rem;
+    z-index: 5;
+    background: rgba(248, 250, 252, 0.9);
+    backdrop-filter: blur(4px);
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+}
+
+.jump-link {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #475569;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.jump-link:hover {
+    color: #b45309;
+    border-color: #fde68a;
+    background-color: #fffbeb;
+}
+
 .tab-content {
     background-color: #ffffff;
     padding: 1.5rem;
@@ -393,9 +382,17 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    scroll-margin-top: 4rem;
 }
 
 .tab-content.hidden {
+    display: none !important;
+}
+
+
+/* 범용 숨김 클래스 (tab-content가 아닌 요소에도 사용) */
+
+.hidden {
     display: none !important;
 }
 
@@ -537,6 +534,13 @@
 /* ==========================================================================
    룬 도감 (Rune DB) 전용 스타일
    ========================================================================== */
+
+.db-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+}
 
 .db-filter-bar {
     display: flex;
@@ -693,8 +697,8 @@
 
 /* 초월 등급: 오로라 스타일 그래디언트 */
 
-.grade-transcendent {
-    background: linear-gradient(135deg, #7c3aed 0%, #db2777 50%, #f59e0b 100%);
+.grade-ascension {
+    background: linear-gradient(135deg, #1ec5db 0%, #5ed1e1 50%, #6bbdb8 100%);
     color: #fff;
     font-weight: 900;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -754,4 +758,956 @@
 
 #rune-card-grid .rune-card-desc {
     font-size: 0.8125rem;
+}
+
+
+/* 도감 카드에 클릭 가능함을 알리는 커서 + 살짝의 인터랙션 */
+
+#rune-card-grid .rune-card {
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+#rune-card-grid .rune-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.15);
+    border-color: #f59e0b;
+}
+
+
+/* ==========================================================================
+   룬 상세정보 모달 (Rune Detail Modal)
+   ========================================================================== */
+
+.rune-modal-card {
+    max-width: 26rem;
+    width: 100%;
+    padding: 1.75rem;
+    position: relative;
+    border-radius: 1.25rem;
+}
+
+.rune-modal-close {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 2;
+    background: transparent;
+    color: #94a3b8;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+    border: none;
+}
+
+.rune-modal-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.rune-modal-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+    transition: all 0.15s ease;
+    z-index: 51;
+}
+
+.rune-modal-arrow:hover:not(:disabled) {
+    background-color: #1e293b;
+    color: #fff;
+}
+
+.rune-modal-arrow:disabled {
+    opacity: 0;
+    cursor: default;
+    pointer-events: none;
+}
+
+.rune-modal-arrow-left {
+    left: max(1.25rem, calc(50% - 16.5rem));
+}
+
+.rune-modal-arrow-right {
+    right: max(1.25rem, calc(50% - 16.5rem));
+}
+
+
+/* ---- 본문 ---- */
+
+.rune-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.125rem;
+}
+
+.rune-modal-img-wrapper {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: #f8fafc;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eef1f6;
+}
+
+.rune-modal-img-wrapper img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.rune-modal-title-group {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.3125rem;
+    min-width: 0;
+}
+
+.rune-modal-name {
+    font-size: 1.1875rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+
+.rune-modal-badges {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.rune-modal-tag {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 0.375rem;
+    line-height: 1.4;
+}
+
+
+/* 효과 본문 - 박스 없이 자연스러운 텍스트로 */
+
+.rune-modal-effect {
+    margin: 0 0 1.25rem;
+    font-size: 0.9375rem;
+    color: #334155;
+    line-height: 1.65;
+    white-space: pre-line;
+}
+
+.rune-modal-effect.is-empty {
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+
+/* 보유 효과 - 한 줄로 강조 */
+
+.rune-modal-hold-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.rune-modal-hold-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.rune-modal-hold-value {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #b45309;
+    text-align: right;
+}
+
+.rune-modal-hold-row.is-empty .rune-modal-hold-value {
+    color: #cbd5e1;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.rune-modal-position {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.6875rem;
+    color: #cbd5e1;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .rune-modal-arrow {
+        position: absolute;
+        top: auto;
+        bottom: -3.5rem;
+        transform: none;
+    }
+    .rune-modal-arrow-left {
+        left: 0;
+    }
+    .rune-modal-arrow-right {
+        right: 0;
+    }
+    .rune-modal-card {
+        margin-bottom: 3.5rem;
+    }
+}
+
+
+/* ==========================================================================
+   빌드 추천 (Build Recommendations) & 준비중 카드
+   ========================================================================== */
+
+.coming-soon-card {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 1rem;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.7;
+}
+
+.build-summary-card {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    border-radius: 0.875rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.build-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.build-section-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+}
+
+.build-stat-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.build-stat-tag {
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+}
+
+.build-rune-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+}
+
+.build-rune-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.375rem 0.75rem 0.375rem 0.375rem;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1e293b;
+    transition: all 0.15s ease;
+}
+
+.build-rune-chip:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.build-rune-chip img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.build-rune-chip-missing {
+    cursor: default;
+    color: #ef4444;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.build-rune-chip-missing .hint {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: #f87171;
+}
+
+.build-skill-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #334155;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   룬 장착 슬롯 UI (DPS 계산기 - 메인/서브 룬)
+   ========================================================================== */
+
+.equip-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.equip-block-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.equip-block-title {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.equip-count-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+}
+
+.equip-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 0.75rem;
+}
+
+.equip-slot {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    text-align: center;
+    transition: all 0.15s ease;
+}
+
+.equip-slot.empty {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+    color: #94a3b8;
+}
+
+.equip-slot.empty:hover {
+    border-color: #f59e0b;
+    color: #b45309;
+    background: #fffbeb;
+}
+
+.equip-slot-plus {
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.equip-slot-empty-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+}
+
+.equip-slot.filled {
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.equip-slot.filled:hover {
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+}
+
+.equip-slot-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.equip-slot-name {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.15;
+    word-break: keep-all;
+    color: #1e293b;
+}
+
+.equip-slot-remove {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    border: none;
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 2;
+}
+
+.equip-slot-remove:hover {
+    background: #dc2626;
+}
+
+
+/* 룬 선택 피커 모달 */
+
+.rune-picker-card {
+    max-width: 42rem;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.rune-picker-grid {
+    overflow-y: auto;
+    padding: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.rune-card.is-taken {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.rune-card.is-current {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px #fde68a;
+}
+
+.rune-current-badge,
+.rune-taken-badge {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    z-index: 2;
+}
+
+.rune-current-badge {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.rune-taken-badge {
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+
+/* ============================================================================
+   반응형 디자인 (Responsive) - main.css 맨 아래에 그대로 붙여넣으세요
+   기존 규칙은 전혀 건드리지 않고, 미디어쿼리로 모바일/태블릿에서만
+   레이아웃을 조정하는 "추가" 스타일입니다.
+   ============================================================================ */
+
+
+/* 모달 공통: 세로로 긴 내용도 화면 안에서 스크롤 되도록 (전 화면 크기 공통 적용) */
+
+.modal-card {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-backdrop {
+    padding: 1rem;
+}
+
+
+/* ----------------------------------------------------------------------
+   태블릿 이하 (~768px)
+   ---------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    /* 헤더: 고정 높이를 풀고, 그룹별로 줄바꿈 되도록 */
+    .header {
+        height: auto;
+        min-height: 3.5rem;
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+    .logo-group {
+        gap: 0.75rem;
+    }
+    .logo {
+        font-size: 1.0625rem;
+    }
+    .target-label {
+        display: none;
+        /* "Target:" 글자는 좁은 화면에서 생략 */
+    }
+    /* 상단 GNB 탭: 한 줄에 다 안 들어가면 가로 스크롤 */
+    .info-nav-bar {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        padding-bottom: 0.25rem;
+    }
+    .info-nav-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .header-user-menu {
+        gap: 0.5rem;
+    }
+    .preset-controller {
+        flex-wrap: wrap;
+    }
+    .btn-preset-action span,
+    .preset-select {
+        font-size: 0.75rem;
+    }
+    /* 본문 여백 축소 */
+    .content-area {
+        padding: 1rem;
+    }
+    .content-container {
+        gap: 1rem;
+    }
+    .tab-content {
+        padding: 1.125rem;
+    }
+    /* 입력 폼: 2열 -> 1열 */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    /* 섹션 빠른 이동 네비게이션 */
+    .section-jump-nav {
+        position: static;
+        /* 모바일에서는 sticky 대신 본문과 함께 스크롤 */
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+    .jump-link {
+        flex-shrink: 0;
+    }
+    /* 룬 도감 / 룬 선택 피커 카드 그리드 - 칸을 좁게 */
+    #rune-card-grid,
+    #rune-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    #rune-card-grid .rune-card,
+    #rune-picker-grid .rune-card {
+        padding: 10px;
+    }
+    #rune-card-grid .rune-card img,
+    #rune-card-grid .rune-icon,
+    #rune-picker-grid .rune-card img,
+    #rune-picker-grid .rune-icon {
+        width: 44px;
+        height: 44px;
+    }
+    /* 장착 슬롯 (메인/서브 룬) */
+    .equip-slot-grid {
+        grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+        gap: 0.5rem;
+    }
+    .equip-slot-img {
+        width: 32px;
+        height: 32px;
+    }
+    /* 빌드 추천 / 룬 카드 클릭 상세 모달 */
+    .rune-modal-card,
+    .rune-picker-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+    .rune-modal-name {
+        font-size: 1.0625rem;
+    }
+    .build-rune-row {
+        gap: 0.5rem;
+    }
+}
+
+
+/* ----------------------------------------------------------------------
+   스마트폰 (~480px)
+   ---------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.625rem 0.75rem;
+    }
+    .divider {
+        display: none;
+    }
+    .target-select {
+        font-size: 0.8125rem;
+        padding: 0.3rem 0.5rem;
+    }
+    .btn-login {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.6875rem;
+    }
+    .content-area {
+        padding: 0.75rem;
+    }
+    .info-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.375rem;
+        font-size: 0.6875rem;
+    }
+    .section-title {
+        font-size: 0.9375rem;
+    }
+    /* 카드형 그리드: 더 촘촘하게 */
+    #rune-card-grid,
+    #rune-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    .equip-slot-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .equip-slot-name {
+        font-size: 0.625rem;
+    }
+    /* 빌드 추천 룬 칩: 줄바꿈 되면서 작게 */
+    .build-rune-chip {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    }
+    .build-rune-chip img {
+        width: 26px;
+        height: 26px;
+    }
+    /* 모달 여백 최소화 */
+    .modal-card {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    .rune-modal-img-wrapper {
+        width: 64px;
+        height: 64px;
+    }
+    .rune-modal-img-wrapper img {
+        width: 44px;
+        height: 44px;
+    }
+    /* 하단 시뮬레이션 버튼 글자 크기 살짝 축소 */
+    .btn-submit {
+        font-size: 0.875rem;
+        padding: 0.875rem;
+    }
+}
+
+
+/* ============================================================================
+   반응형 디자인 (Responsive) - main.css 맨 아래에 그대로 붙여넣으세요
+   기존 규칙은 전혀 건드리지 않고, 미디어쿼리로 모바일/태블릿에서만
+   레이아웃을 조정하는 "추가" 스타일입니다.
+   ============================================================================ */
+
+
+/* 모달 공통: 세로로 긴 내용도 화면 안에서 스크롤 되도록 (전 화면 크기 공통 적용) */
+
+.modal-card {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-backdrop {
+    padding: 1rem;
+}
+
+
+/* ----------------------------------------------------------------------
+   태블릿 이하 (~768px)
+   ---------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    /* 헤더: 고정 높이를 풀고, 그룹별로 줄바꿈 되도록 */
+    .header {
+        height: auto;
+        min-height: 3.5rem;
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+    .logo-group {
+        gap: 0.75rem;
+    }
+    .logo {
+        font-size: 1.0625rem;
+    }
+    .target-label {
+        display: none;
+        /* "Target:" 글자는 좁은 화면에서 생략 */
+    }
+    /* 상단 GNB 탭: 한 줄에 다 안 들어가면 가로 스크롤 */
+    .info-nav-bar {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        padding-bottom: 0.25rem;
+    }
+    .info-nav-btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .header-user-menu {
+        gap: 0.5rem;
+    }
+    .preset-controller {
+        flex-wrap: wrap;
+    }
+    .btn-preset-action span,
+    .preset-select {
+        font-size: 0.75rem;
+    }
+    /* 본문 여백 축소 */
+    .content-area {
+        padding: 1rem;
+    }
+    .content-container {
+        gap: 1rem;
+    }
+    .tab-content {
+        padding: 1.125rem;
+    }
+    /* 입력 폼: 2열 -> 1열 */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    /* 섹션 빠른 이동 네비게이션 */
+    .section-jump-nav {
+        position: static;
+        /* 모바일에서는 sticky 대신 본문과 함께 스크롤 */
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+    .jump-link {
+        flex-shrink: 0;
+    }
+    /* 룬 도감 / 룬 선택 피커 카드 그리드 - 칸을 좁게, 이름 텍스트는 확실히 보이도록 */
+    #rune-card-grid,
+    #rune-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 10px;
+    }
+    #rune-card-grid .rune-card,
+    #rune-picker-grid .rune-card {
+        padding: 8px 6px;
+        overflow: visible;
+        /* 이름이 카드 밖으로 잘리지 않도록 */
+        min-height: 108px;
+    }
+    #rune-card-grid .rune-card img,
+    #rune-card-grid .rune-icon,
+    #rune-picker-grid .rune-card img,
+    #rune-picker-grid .rune-icon {
+        width: 36px;
+        height: 36px;
+    }
+    #rune-card-grid .rune-type-badge,
+    #rune-picker-grid .rune-type-badge {
+        font-size: 0.5625rem;
+        padding: 0.1rem 0.4rem;
+    }
+    #rune-card-grid .rune-name,
+    #rune-picker-grid .rune-name {
+        font-size: 0.625rem;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+    /* 장착 슬롯 (메인/서브 룬) */
+    .equip-slot-grid {
+        grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+        gap: 0.5rem;
+    }
+    .equip-slot-img {
+        width: 32px;
+        height: 32px;
+    }
+    /* 빌드 추천 / 룬 카드 클릭 상세 모달 */
+    .rune-modal-card,
+    .rune-picker-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+    .rune-modal-name {
+        font-size: 1.0625rem;
+    }
+    .build-rune-row {
+        gap: 0.5rem;
+    }
+}
+
+
+/* ----------------------------------------------------------------------
+   스마트폰 (~480px)
+   ---------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .header {
+        padding: 0.625rem 0.75rem;
+    }
+    .divider {
+        display: none;
+    }
+    .target-select {
+        font-size: 0.8125rem;
+        padding: 0.3rem 0.5rem;
+    }
+    .btn-login {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.6875rem;
+    }
+    .content-area {
+        padding: 0.75rem;
+    }
+    .info-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.375rem;
+        font-size: 0.6875rem;
+    }
+    .section-title {
+        font-size: 0.9375rem;
+    }
+    /* 카드형 그리드: 더 촘촘하게, 이름은 여전히 보이도록 */
+    #rune-card-grid,
+    #rune-picker-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    #rune-card-grid .rune-card,
+    #rune-picker-grid .rune-card {
+        padding: 6px 4px;
+        min-height: 96px;
+    }
+    #rune-card-grid .rune-card img,
+    #rune-card-grid .rune-icon,
+    #rune-picker-grid .rune-card img,
+    #rune-picker-grid .rune-icon {
+        width: 30px;
+        height: 30px;
+    }
+    #rune-card-grid .rune-name,
+    #rune-picker-grid .rune-name {
+        font-size: 0.5625rem;
+    }
+    .equip-slot-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .equip-slot-name {
+        font-size: 0.625rem;
+    }
+    /* 빌드 추천 룬 칩: 줄바꿈 되면서 작게 */
+    .build-rune-chip {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    }
+    .build-rune-chip img {
+        width: 26px;
+        height: 26px;
+    }
+    /* 모달 여백 최소화 */
+    .modal-card {
+        padding: 1rem;
+        border-radius: 1rem;
+    }
+    .rune-modal-img-wrapper {
+        width: 64px;
+        height: 64px;
+    }
+    .rune-modal-img-wrapper img {
+        width: 44px;
+        height: 44px;
+    }
+    /* 하단 시뮬레이션 버튼 글자 크기 살짝 축소 */
+    .btn-submit {
+        font-size: 0.875rem;
+        padding: 0.875rem;
+    }
 }

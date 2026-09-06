@@ -36,11 +36,11 @@
 
         <!-- 상단 정보 페이지 탭 네비게이션 -->
         <nav class="info-nav-bar">
-            <button class="info-nav-btn active" onclick="switchMainView('calculator')">🧮 DPS 계산기</button>
-            <button class="info-nav-btn" onclick="switchMainView('builds')">💡 빌드 도감</button>
-            <button class="info-nav-btn" onclick="switchMainView('skills')">⚡ 스킬 도감</button>
-            <button class="info-nav-btn" onclick="switchMainView('runes')">💎 룬 도감</button>
-            <button class="info-nav-btn" onclick="switchMainView('contents')">⚔️ 콘텐츠 공략</button>
+            <button type="button" id="gnb-calculator" class="info-nav-btn active" onclick="switchMainView('calculator')">🧮 DPS 계산기</button>
+            <button type="button" id="gnb-builds" class="info-nav-btn" onclick="switchMainView('builds')">💡 빌드 추천</button>
+            <button type="button" id="gnb-skills" class="info-nav-btn" onclick="switchMainView('skills')">⚡ 스킬 도감</button>
+            <button type="button" id="gnb-runes" class="info-nav-btn" onclick="switchMainView('runes')">💎 룬 도감</button>
+            <button type="button" id="gnb-contents" class="info-nav-btn" onclick="switchMainView('contents')">⚔️ 콘텐츠 공략</button>
         </nav>
 
         <!-- 헤더 우측 메뉴 (프리셋 퀵 컨트롤러 & 로그인) -->
@@ -63,125 +63,139 @@
         </div>
     </header>
 
-    <!-- 상단 메인 뷰 전환 탭 (헤더 바로 아래 추가) -->
-    <nav class="info-nav-bar">
-        <button type="button" id="gnb-calculator" class="info-nav-btn active" onclick="switchMainView('calculator')">
-            🧮 DPS 계산기
-        </button>
-        <button type="button" id="gnb-runes" class="info-nav-btn" onclick="switchMainView('runes')">
-            💎 룬 도감
-        </button>
-        <!-- 추후 스킬, 빌드 도감 등 추가 영역 -->
-    </nav>
-
-    <!-- 메인 레이아웃 (사이드바 + 콘텐츠) -->
+    <!-- 메인 레이아웃 -->
     <div class="main-wrapper">
 
-        <!-- 2. 좌측 사이드바 (Sidebar Menu) -->
-        <aside class="sidebar">
-            <div class="sidebar-title">Calculator Setup</div>
-
-            <button onclick="switchTab('tab-character')" id="btn-tab-character" class="tab-btn active">
-                <span>👤</span> 1. 캐릭터 & 전직
-            </button>
-
-            <button onclick="switchTab('tab-equipment')" id="btn-tab-equipment" class="tab-btn">
-                <span>⚔️</span> 2. 장비 & 대포
-            </button>
-
-            <button onclick="switchTab('tab-companions')" id="btn-tab-companions" class="tab-btn">
-                <span>🐱</span> 3. 동료 & 가디언
-            </button>
-
-            <button onclick="switchTab('tab-runes')" id="btn-tab-runes" class="tab-btn">
-                <span>💎</span> 4. 룬 & 냥혼석
-            </button>
-
-            <button onclick="switchTab('tab-skills')" id="btn-tab-skills" class="tab-btn">
-                <span>⚡</span> 5. 스킬 순서 & 딜레이
-            </button>
-        </aside>
-
-        <!-- 3. 메인 작업 영역 (Main Content Area) -->
+        <!-- 메인 작업 영역 (Main Content Area) -->
         <main class="content-area">
             <div class="content-container">
 
-                <!-- 안내 문구 카드 -->
-                <div class="info-card">
-                    <span>💡 각 카테고리별 스탯을 입력한 후, 하단 <b>[시뮬레이션 실행]</b> 버튼을 누르면 계산됩니다.</span>
-                    <span class="info-version">v1.0.0-draft</span>
-                </div>
+                <div id="view-calculator">
+                    <!-- 안내 문구 카드 -->
+                    <div class="info-card">
+                        <span>💡 아래 1~5번 항목을 순서대로 입력한 후, 맨 아래 <b>[시뮬레이션 실행]</b> 버튼을 누르면 계산됩니다.</span>
+                        <span class="info-version">v1.0.0-draft</span>
+                    </div>
 
-                <!-- TAB 1: 캐릭터 & 전직 -->
-                <section id="tab-character" class="tab-content">
-                    <h2 class="section-title">
-                        👤 캐릭터 기본 스탯 및 전직 설정
-                    </h2>
-                    <div class="form-grid">
-                        <div>
-                            <label class="form-label">전직 단계</label>
-                            <select class="form-select">
+                    <!-- 섹션 빠른 이동 네비게이션 (사이드바 대신) -->
+
+                    <!-- TAB 1: 캐릭터 & 전직 -->
+                    <section id="tab-character" class="tab-content">
+                        <h2 class="section-title">
+                            👤 1. 캐릭터 기본 스탯 및 전직 설정
+                        </h2>
+                        <div class="form-grid">
+                            <div>
+                                <label class="form-label">전직 단계</label>
+                                <select class="form-select">
                                 <option value="novice">견습 (2초간 500%)</option>
                                 <option value="normal">일반 (3초간 2000%)</option>
                                 <option value="expert" selected>숙련된 (15초간 2000%)</option>
                             </select>
+                            </div>
+                            <div>
+                                <label class="form-label">생선 레벨</label>
+                                <input type="number" value="100" class="form-input">
+                            </div>
                         </div>
-                        <div>
-                            <label class="form-label">생선 레벨</label>
-                            <input type="number" value="100" class="form-input">
-                        </div>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- TAB 2: 장비 & 대포 (초기 숨김) -->
-                <section id="tab-equipment" class="tab-content hidden">
-                    <h2 class="section-title">
-                        ⚔️ 장비 및 대포 세팅
-                    </h2>
-                    <div class="form-grid">
-                        <div>
-                            <label class="form-label">장착 대포 등급</label>
-                            <select class="form-select">
+                    <!-- TAB 2: 장비 & 대포 (초기 숨김) -->
+                    <section id="tab-equipment" class="tab-content">
+                        <h2 class="section-title">
+                            ⚔️ 2. 장비 및 대포 세팅
+                        </h2>
+                        <div class="form-grid">
+                            <div>
+                                <label class="form-label">장착 대포 등급</label>
+                                <select class="form-select">
                                 <option value="mythic">신화 (+505%공격력 증폭)</option>
                                 <option value="legend">전설 (+106%공격력 증폭)</option>
                                 <option value="epic">에픽 (+41%공격력 증폭)</option>
                             </select>
+                            </div>
+                            <div>
+                                <label class="form-label">대포 서브옵션 3줄</label>
+                                <input type="text" placeholder="예: 생선제작레벨, 동료피해" class="form-input">
+                            </div>
                         </div>
-                        <div>
-                            <label class="form-label">대포 서브옵션 3줄</label>
-                            <input type="text" placeholder="예: 생선제작레벨, 동료피해" class="form-input">
+                    </section>
+
+                    <!-- TAB 3: 동료 & 가디언 (초기 숨김) -->
+                    <section id="tab-companions" class="tab-content">
+                        <h2 class="section-title">
+                            🐱 3. 동료, 탈것 및 가디언
+                        </h2>
+                        <p class="placeholder-text">동료 캐릭터 성급 및 가디언 버프 옵션 입력 창입니다.</p>
+                    </section>
+
+                    <!-- TAB 4: 룬 & 냥혼석 (초기 숨김) -->
+                    <section id="tab-runes" class="tab-content">
+                        <h2 class="section-title">
+                            💎 4. 메인/서브 룬 및 냥혼석
+                        </h2>
+
+                        <!-- 메인(특수) 룬 장착 슬롯 (최대 4개) -->
+                        <div class="equip-block">
+                            <div class="equip-block-head">
+                                <span class="equip-block-title">✨ 메인 특수 룬</span>
+                                <span class="equip-count-badge" id="main-rune-count-badge">0 / 4</span>
+                            </div>
+                            <div id="main-rune-slot-grid" class="equip-slot-grid">
+                                <!-- js/rune-equip.js가 슬롯 4개를 렌더링합니다 -->
+                            </div>
+                        </div>
+
+                        <!-- 서브 룬 장착 슬롯 (최대 6개) -->
+                        <div class="equip-block">
+                            <div class="equip-block-head">
+                                <span class="equip-block-title">🔹 서브 룬</span>
+                                <span class="equip-count-badge" id="sub-rune-count-badge">0 / 6</span>
+                            </div>
+                            <div id="sub-rune-slot-grid" class="equip-slot-grid">
+                                <!-- js/rune-equip.js가 슬롯 6개를 렌더링합니다 -->
+                            </div>
+                        </div>
+
+                        <p class="placeholder-text">💭 냥혼석 설정 영역은 준비 중입니다.</p>
+                    </section>
+
+                    <!-- 룬 선택 피커 모달 -->
+                    <div id="rune-picker-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeRunePicker()">
+                        <div class="modal-card rune-picker-card">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="rune-picker-title">룬 선택</h3>
+                                <button type="button" class="modal-close-btn" onclick="closeRunePicker()">✕</button>
+                            </div>
+
+                            <div class="db-filter-bar">
+                                <div class="filter-group" id="rune-picker-grade-filter">
+                                    <!-- js/rune-equip.js가 등급 버튼을 채웁니다 -->
+                                </div>
+                            </div>
+
+                            <div id="rune-picker-grid" class="rune-grid rune-picker-grid">
+                                <!-- js/rune-equip.js가 선택 가능한 룬 목록을 렌더링합니다 -->
+                            </div>
                         </div>
                     </div>
-                </section>
 
-                <!-- TAB 3: 동료 & 가디언 (초기 숨김) -->
-                <section id="tab-companions" class="tab-content hidden">
-                    <h2 class="section-title">
-                        🐱 동료, 탈것 및 가디언
-                    </h2>
-                    <p class="placeholder-text">동료 캐릭터 성급 및 가디언 버프 옵션 입력 창입니다.</p>
-                </section>
+                    <!-- TAB 5: 스킬 순서 & 딜레이 (초기 숨김) -->
+                    <section id="tab-skills" class="tab-content">
+                        <h2 class="section-title">
+                            ⚡ 5. 스킬 순서 및 자동 스킬 딜레이
+                        </h2>
+                        <p class="placeholder-text">스킬 발동 순서 및 자동 스킬 딜레이(초) 설정 영역입니다.</p>
+                    </section>
 
-                <!-- TAB 4: 룬 & 냥혼석 (초기 숨김) -->
-                <section id="tab-runes" class="tab-content hidden">
-                    <h2 class="section-title">
-                        💎 메인/서브 룬 및 냥혼석
-                    </h2>
-                    <!-- [추가] 계산기 탭 내 메인 룬 선택 그리드 -->
-                    <div id="main-rune-setup-grid" class="rune-grid">
-                        <!-- js/rune.js에 의해 동적으로 장착 가능한 메인 룬이 출력됩니다 -->
-                    </div>
-                </section>
+                    <!-- 하단 대형 시뮬레이션 버튼 -->
+                    <button class="btn-submit">
+                    🚀 DPS 시뮬레이션 실행 및 결과 보기
+                </button>
+                </div>
+                <!-- /view-calculator -->
 
-                <!-- TAB 5: 스킬 순서 & 딜레이 (초기 숨김) -->
-                <section id="tab-skills" class="tab-content hidden">
-                    <h2 class="section-title">
-                        ⚡ 스킬 순서 및 자동 스킬 딜레이
-                    </h2>
-                    <p class="placeholder-text">스킬 발동 순서 및 자동 스킬 딜레이(초) 설정 영역입니다.</p>
-                </section>
-
-                <!-- TAB: 룬 도감 (기존 tab-content들과 같은 위치에 추가) -->
+                <!-- 룬 도감 뷰 -->
                 <section id="view-runes" class="tab-content hidden">
                     <div class="db-header">
                         <h2 class="section-title">💎 룬 도감 (Rune Database)</h2>
@@ -201,13 +215,12 @@
                         <div class="filter-group">
                             <select id="rune-grade-filter" class="form-select" style="width: auto;" onchange="filterRunes('grade', this.value)">
                                 <option value="all">모든 등급 보기</option>
-                                <option value="common">커먼 (Common)</option>
                                 <option value="uncommon">언커먼 (Uncommon)</option>
                                 <option value="rare">레어 (Rare)</option>
                                 <option value="epic">에픽 (Epic)</option>
-                                <option value="legend">전설 (Legend)</option>
+                                <option value="legendary">전설 (Legendary)</option>
                                 <option value="mythic">신화 (Mythic)</option>
-                                <option value="transcendent">초월 (Ascension)</option>
+                                <option value="ascension">초월 (Ascension)</option>
                             </select>
                         </div>
                     </div>
@@ -218,10 +231,39 @@
                     </div>
                 </section>
 
-                <!-- 하단 대형 시뮬레이션 버튼 -->
-                <button class="btn-submit">
-                    🚀 DPS 시뮬레이션 실행 및 결과 보기
-                </button>
+                <!-- 빌드 추천 뷰 -->
+                <section id="view-builds" class="tab-content hidden">
+                    <div class="db-header">
+                        <h2 class="section-title">💡 빌드 및 스킬세팅 추천</h2>
+                        <p class="placeholder-text">콘텐츠(타겟)별로 추천하는 메인/서브 룬 구성과 스킬 세팅을 확인하세요.</p>
+                    </div>
+
+                    <div class="db-filter-bar">
+                        <div class="filter-group" id="build-target-filter">
+                            <!-- js/builds.js 가 동적으로 채웁니다 (헤더의 Target 목록과 동일) -->
+                        </div>
+                    </div>
+
+                    <div id="build-recommend-body">
+                        <!-- js/builds.js에 의해 동적으로 렌더링됩니다 -->
+                    </div>
+                </section>
+
+                <!-- 스킬 도감 뷰 (준비 중) -->
+                <section id="view-skills" class="tab-content hidden">
+                    <div class="db-header">
+                        <h2 class="section-title">⚡ 스킬 도감</h2>
+                    </div>
+                    <div class="coming-soon-card">🚧 스킬 도감은 준비 중입니다.</div>
+                </section>
+
+                <!-- 콘텐츠 공략 뷰 (준비 중) -->
+                <section id="view-contents" class="tab-content hidden">
+                    <div class="db-header">
+                        <h2 class="section-title">⚔️ 콘텐츠 공략</h2>
+                    </div>
+                    <div class="coming-soon-card">🚧 콘텐츠 공략은 준비 중입니다.</div>
+                </section>
 
             </div>
         </main>
@@ -250,9 +292,30 @@
         </div>
     </div>
 
+    <!-- 룬 상세정보 모달 (룬 도감 카드 클릭 시 표시) -->
+    <div id="rune-detail-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeRuneModal()">
+        <div class="modal-card rune-modal-card">
+            <button type="button" class="modal-close-btn rune-modal-close" onclick="closeRuneModal()">✕</button>
+
+            <button type="button" class="rune-modal-arrow rune-modal-arrow-left" id="rune-modal-prev" onclick="navigateRuneModal(-1)" title="이전 룬 (←)">
+                ◀
+            </button>
+            <button type="button" class="rune-modal-arrow rune-modal-arrow-right" id="rune-modal-next" onclick="navigateRuneModal(1)" title="다음 룬 (→)">
+                ▶
+            </button>
+
+            <div id="rune-modal-body" class="rune-modal-body">
+                <!-- js/rune.js의 openRuneModal()에 의해 동적으로 채워집니다 -->
+            </div>
+        </div>
+    </div>
+
     <!-- 외부 자바스크립트 연결 (순서 준수) -->
+    <script src="js/state.js"></script>
     <script src="js/fetcher.js"></script>
     <script src="js/rune.js"></script>
+    <script src="js/rune-equip.js"></script>
+    <script src="js/builds.js"></script>
     <script src="js/preset.js"></script>
     <script src="js/main.js"></script>
 </body>
