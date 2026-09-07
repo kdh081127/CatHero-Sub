@@ -169,6 +169,9 @@
                             </div>
 
                             <div class="db-filter-bar">
+                                <div class="filter-group">
+                                    <input type="text" id="rune-picker-search-input" class="form-input" style="width: 220px;" placeholder="🔍 룬 이름으로 검색..." oninput="filterRunePicker('search', this.value)">
+                                </div>
                                 <div class="filter-group" id="rune-picker-grade-filter">
                                     <!-- js/rune-equip.js가 등급 버튼을 채웁니다 -->
                                 </div>
@@ -204,6 +207,11 @@
 
                     <!-- 룬 필터 컨트롤러 -->
                     <div class="db-filter-bar">
+                        <!-- 검색 필드 -->
+                        <div class="filter-group">
+                            <input type="text" id="rune-search-input" class="form-input" style="width: 220px;" placeholder="🔍 룬 이름으로 검색..." oninput="filterRunes('search', this.value)">
+                        </div>
+
                         <!-- 메인/서브 구분 필터 -->
                         <div class="filter-group">
                             <button class="filter-btn active" onclick="filterRunes('type', 'all')">전체</button>

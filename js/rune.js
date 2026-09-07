@@ -4,7 +4,7 @@ let currentRuneModalKey = null;
 
 const RUNE_FILTER_STORAGE_KEY = "cathero_rune_filter";
 
-let currentFilter = { type: "all", grade: "all" };
+let currentFilter = { type: "all", grade: "all", search: "" };
 
 // 등급/타입 표기용 매핑
 const RUNE_GRADE_NAMES = {
@@ -53,6 +53,9 @@ function syncRuneFilterUI() {
 
     const gradeSelect = document.getElementById("rune-grade-filter");
     if (gradeSelect) gradeSelect.value = currentFilter.grade;
+
+    const searchInput = document.getElementById("rune-search-input");
+    if (searchInput && searchInput.value !== currentFilter.search) searchInput.value = currentFilter.search;
 }
 
 /* ==========================================================================
@@ -91,12 +94,16 @@ function renderRuneList() {
     const grid = document.getElementById("rune-card-grid");
     if (!grid) return;
 
+    const keyword = (currentFilter.search || "").trim().toLowerCase();
+
     filteredRuneData = runeData.filter((rune) => {
         const typeMatch =
             currentFilter.type === "all" || rune.type === currentFilter.type;
         const gradeMatch =
             currentFilter.grade === "all" || rune.grade === currentFilter.grade;
-        return typeMatch && gradeMatch;
+        const searchMatch =
+            !keyword || (rune.name || "").toLowerCase().includes(keyword);
+        return typeMatch && gradeMatch && searchMatch;
     });
 
     if (filteredRuneData.length === 0) {

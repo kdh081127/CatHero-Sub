@@ -13,6 +13,7 @@ const SUB_RUNE_SLOT_COUNT = 6;
 
 let runePickerContext = null; // { slotType: 'main'|'sub', slotIndex: number }
 let runePickerGrade = "all";
+let runePickerSearch = "";
 
 /* ==========================================================================
    슬롯 렌더링
@@ -77,15 +78,25 @@ function unequipSlot(slotType, slotIndex) {
 function openRunePicker(slotType, slotIndex) {
     runePickerContext = { slotType, slotIndex };
     runePickerGrade = "all";
+    runePickerSearch = "";
 
     const title = document.getElementById("rune-picker-title");
     if (title) title.textContent = slotType === "main" ? "✨ 메인 특수 룬 선택" : "🔹 서브 룬 선택";
+
+    const searchInput = document.getElementById("rune-picker-search-input");
+    if (searchInput) searchInput.value = "";
 
     renderRunePickerGradeFilter();
     renderRunePickerGrid();
 
     const modal = document.getElementById("rune-picker-modal");
     if (modal) modal.classList.remove("hidden");
+}
+
+function filterRunePicker(category, value) {
+    if (category === "search") runePickerSearch = value;
+    else if (category === "grade") runePickerGrade = value;
+    renderRunePickerGrid();
 }
 
 function closeRunePicker() {
@@ -124,9 +135,11 @@ function renderRunePickerGrid() {
     // 같은 종류(main/sub)에서 "다른 슬롯"에 이미 장착된 룬은 중복 장착 불가하도록 제외
     const takenKeys = new Set(equippedArray.filter((k, idx) => k && idx !== slotIndex));
 
+    const keyword = (runePickerSearch || "").trim().toLowerCase();
     const list = (typeof runeData !== "undefined" ? runeData : []).filter((r) => {
         if (r.type !== slotType) return false;
         if (runePickerGrade !== "all" && r.grade !== runePickerGrade) return false;
+        if (keyword && !(r.name || "").toLowerCase().includes(keyword)) return false;
         return true;
     });
 
