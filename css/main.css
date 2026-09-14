@@ -106,23 +106,6 @@ html {
     font-weight: 500;
 }
 
-.btn-login {
-    background-color: #0f172a;
-    color: #ffffff;
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    transition: background-color 0.15s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-login:hover {
-    background-color: #1e293b;
-}
-
 
 /* ==========================================================================
    3. 프리셋 컨트롤러 & 모달 스타일
@@ -1094,7 +1077,7 @@ html {
 
 
 /* ==========================================================================
-   룬 장착 슬롯 UI (DPS 계산기 - 메인/서브 룬)
+   룬 장착 슬롯 UI (명중/회피 실험 - 메인/서브 룬)
    ========================================================================== */
 
 .equip-block {
@@ -1300,49 +1283,71 @@ html {
    ---------------------------------------------------------------------- */
 
 @media (max-width: 768px) {
-    /* 헤더: 고정 높이를 풀고, 그룹별로 줄바꿈 되도록 */
+    /* 헤더: 로그인 버튼이 빠지면서 여유가 생겨, 1행(로고 ↔ 프리셋)은
+       더 넉넉한 크기로, 2행(GNB 탭)만 자체 스크롤을 유지. */
     .header {
         height: auto;
-        min-height: 3.5rem;
         flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
         row-gap: 0.5rem;
-        padding: 0.75rem 1rem;
+        padding: 0.75rem 1.125rem;
     }
     .logo-group {
         gap: 0.75rem;
     }
     .logo {
-        font-size: 1.0625rem;
+        font-size: 1.125rem;
+    }
+    .logo-badge {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+    }
+    .divider {
+        display: none;
     }
     .target-label {
         display: none;
         /* "Target:" 글자는 좁은 화면에서 생략 */
     }
-    /* 상단 GNB 탭: 한 줄에 다 안 들어가면 가로 스크롤 */
+    .target-select {
+        font-size: 0.8125rem;
+        padding: 0.4rem 0.75rem;
+        max-width: 11rem;
+    }
+    /* GNB 탭: 항상 2번째 줄로 내려가고, 탭 바 자체만 가로 스크롤 */
     .info-nav-bar {
+        flex-basis: 100%;
         order: 3;
-        width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         flex-wrap: nowrap;
         justify-content: flex-start;
-        padding-bottom: 0.25rem;
+        padding: 0.5rem 0 0;
+        margin-top: 0.25rem;
+        border-top: 1px solid #f1f5f9;
     }
     .info-nav-btn {
         flex-shrink: 0;
         white-space: nowrap;
         font-size: 0.8125rem;
-        padding: 0.5rem 0.75rem;
+        padding: 0.5rem 0.875rem;
     }
     .header-user-menu {
         gap: 0.5rem;
     }
     .preset-controller {
-        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.3rem 0.625rem;
     }
-    .btn-preset-action span,
     .preset-select {
-        font-size: 0.75rem;
+        font-size: 0.8125rem;
+        max-width: 8rem;
+    }
+    .btn-preset-action {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8125rem;
     }
     /* 본문 여백 축소 */
     .content-area {
@@ -1433,17 +1438,24 @@ html {
 @media (max-width: 480px) {
     .header {
         padding: 0.625rem 0.75rem;
+        row-gap: 0.375rem;
+    }
+    .logo {
+        font-size: 0.9375rem;
     }
     .divider {
         display: none;
     }
     .target-select {
-        font-size: 0.8125rem;
+        font-size: 0.75rem;
         padding: 0.3rem 0.5rem;
+        max-width: 8.5rem;
     }
-    .btn-login {
-        padding: 0.4rem 0.7rem;
-        font-size: 0.6875rem;
+    .preset-controller {
+        padding: 0.25rem 0.375rem;
+    }
+    .btn-preset-action {
+        padding: 0.3rem 0.5rem;
     }
     .content-area {
         padding: 0.75rem;
@@ -1511,5 +1523,938 @@ html {
     .btn-submit {
         font-size: 0.875rem;
         padding: 0.875rem;
+    }
+}
+
+
+/* ==========================================================================
+   7. 명중/회피 실험 - 결과 박스
+   (DPS 계산기 제거 후 신설된 "명중/회피 실험" 탭 전용 스타일)
+   ========================================================================== */
+
+.experiment-panel {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.experiment-panel.hidden {
+    display: none !important;
+}
+
+.result-box {
+    margin-top: 0.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+}
+
+.result-box.hidden {
+    display: none !important;
+}
+
+.result-rows {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed #e2e8f0;
+    font-size: 0.875rem;
+}
+
+.result-row:last-child {
+    border-bottom: none;
+}
+
+.result-label {
+    color: #64748b;
+}
+
+.result-value {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.result-footnote {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: #b45309;
+}
+
+
+/* ==========================================================================
+   8. 크럼블허브(crumblehub.co) 룩앤필 반영 - 라이트 테마 버전
+   ----------------------------------------------------------------------
+   원본 사이트는 다크 배경이지만, 요청에 따라 배경은 기존 흰색을 유지하고
+   굵은 헤드라인 타이포그래피 / 언더라인 탭 / 세그먼트 필 / 상단 컬러 바 /
+   오버라인 라벨 같은 "느낌"만 가져왔습니다.
+   ========================================================================== */
+
+
+/* 8-1. 최상단 포인트 컬러 바 */
+
+.app-container {
+    position: relative;
+}
+
+.app-container::before {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, #f97316, #f59e0b, #ef4444);
+}
+
+
+/* 8-2. 로고 배지 (crumblehub의 원형 "C" 아이콘 로고 참고) */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.logo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+
+/* 8-3. GNB 탭: 필(pill) 채우기 대신 언더라인 강조 방식으로 변경 */
+
+.info-nav-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.5rem 0.25rem;
+    margin: 0 0.5rem;
+    font-weight: 800;
+}
+
+.info-nav-btn:hover {
+    background: none;
+    color: #b45309;
+}
+
+.info-nav-btn.active {
+    background: none;
+    border-bottom-color: #ea580c;
+    color: #0f172a;
+}
+
+
+/* 8-4. 페이지 히어로 인트로 (오버라인 + 굵은 타이틀 + 서브텍스트) */
+
+.page-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding-bottom: 0.5rem;
+}
+
+.page-eyebrow {
+    display: inline-block;
+    width: fit-content;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ea580c;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+
+/* 8-5. 도감/DB 페이지 헤더: 오버라인 + 굵은 타이틀 + 구분선 패턴 통일 */
+
+.db-header .section-title {
+    font-size: 1.375rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.db-header-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin-top: 0.75rem;
+}
+
+
+/* 8-6. 명중/회피 실험 모드 선택: 카드형 선택 UI (뽑기 기대값 도구의 "쿠키 뽑기 / 펫 뽑기" 카드 참고) */
+
+.mode-select-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.mode-select-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1 1 240px;
+    padding: 0.875rem 1.125rem;
+    background-color: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+.mode-select-card:hover {
+    border-color: #fdba74;
+    background-color: #fff7ed;
+}
+
+.mode-select-card.active {
+    border-color: #ea580c;
+    background-color: #fff7ed;
+    box-shadow: 0 1px 2px 0 rgba(234, 88, 12, 0.15);
+}
+
+.mode-select-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    background-color: #f8fafc;
+    border-radius: 0.75rem;
+}
+
+.mode-select-card.active .mode-select-icon {
+    background-color: #ffedd5;
+}
+
+.mode-select-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.mode-select-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.mode-select-subtitle {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.mode-select-card.active .mode-select-title {
+    color: #b45309;
+}
+
+@media (max-width: 480px) {
+    .mode-select-group {
+        flex-direction: column;
+    }
+    .mode-select-card {
+        flex: 1 1 auto;
+    }
+    .page-title {
+        font-size: 1.375rem;
+    }
+}
+
+
+/* 8-7. 스텝 번호 배지 (뽑기 도구의 "01 뽑기 설정" 참고) */
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 0.375rem;
+    margin-right: 0.375rem;
+    border-radius: 0.5rem;
+    background-color: #fff7ed;
+    border: 1px solid #fdba74;
+    color: #ea580c;
+    font-size: 0.75rem;
+    font-weight: 800;
+    vertical-align: middle;
+}
+
+
+/* 8-8. 결과 도넛 게이지 (뽑기 도구의 원형 확률 게이지 참고) */
+
+.result-gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.result-gauge {
+    --gauge-pct: 0;
+    position: relative;
+    width: 5.5rem;
+    height: 5.5rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: conic-gradient(#ea580c calc(var(--gauge-pct) * 1%), #e2e8f0 0);
+}
+
+.result-gauge::before {
+    content: "";
+    position: absolute;
+    inset: 0.5rem;
+    background: #f8fafc;
+    border-radius: 50%;
+}
+
+.result-gauge-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.result-gauge-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.result-gauge-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.result-gauge-desc {
+    font-size: 0.8125rem;
+    color: #475569;
+}
+
+
+/* ==========================================================================
+   9. 동료 도감 (Companion Database) - 상세 모달 전용 스타일
+   ========================================================================== */
+
+.companion-special-section {
+    margin-top: 1.125rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.companion-special-section-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 0.625rem;
+}
+
+.companion-special-slot {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    margin-bottom: 0.625rem;
+}
+
+.companion-special-slot:last-child {
+    margin-bottom: 0;
+}
+
+.companion-special-slot-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.companion-special-slot-name {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.companion-special-slot-level {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
+}
+
+.companion-special-level-row {
+    display: flex;
+    gap: 0.625rem;
+    padding: 0.3rem 0;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.companion-special-level-num {
+    flex-shrink: 0;
+    font-weight: 800;
+    color: #94a3b8;
+    min-width: 2.5rem;
+}
+
+.companion-special-unlock {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #b45309;
+    font-weight: 700;
+}
+
+.companion-awaken-box {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #fff7ed, #fef3c7);
+    border: 1px solid #fde68a;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+}
+
+.companion-awaken-title {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: #b45309;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.375rem;
+}
+
+.companion-awaken-condition {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #92400e;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+}
+
+.companion-awaken-effect {
+    font-size: 0.8125rem;
+    color: #78350f;
+    line-height: 1.55;
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   10. 동료 도감 (Companion Database) - 룬과 분리된 전용 카드/그리드/모달
+   ----------------------------------------------------------------------
+   룬 도감(.rune-*)과 시각적으로는 비슷하지만, 나중에 동료 전용으로
+   자유롭게 다르게 바꿀 수 있도록 클래스 자체를 완전히 분리해뒀습니다.
+   ========================================================================== */
+
+.companion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 18px;
+}
+
+.companion-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.companion-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.15);
+    border-color: #f59e0b;
+}
+
+.companion-badge-group {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.companion-type-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.companion-img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.companion-icon {
+    display: block;
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.companion-name {
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    margin-top: 2px;
+    word-break: keep-all;
+    text-align: center;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+
+/* ==========================================================================
+   동료 상세정보 모달 (Companion Detail Modal)
+   ========================================================================== */
+
+.companion-modal-card {
+    max-width: 26rem;
+    width: 100%;
+    padding: 1.75rem;
+    position: relative;
+    border-radius: 1.25rem;
+}
+
+.companion-modal-close {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 2;
+    background: transparent;
+    color: #94a3b8;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+    border: none;
+}
+
+.companion-modal-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.companion-modal-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+    transition: all 0.15s ease;
+    z-index: 51;
+}
+
+.companion-modal-arrow:hover:not(:disabled) {
+    background-color: #1e293b;
+    color: #fff;
+}
+
+.companion-modal-arrow:disabled {
+    opacity: 0;
+    cursor: default;
+    pointer-events: none;
+}
+
+.companion-modal-arrow-left {
+    left: max(1.25rem, calc(50% - 16.5rem));
+}
+
+.companion-modal-arrow-right {
+    right: max(1.25rem, calc(50% - 16.5rem));
+}
+
+.companion-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.125rem;
+}
+
+.companion-modal-img-wrapper {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: #f8fafc;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eef1f6;
+}
+
+.companion-modal-img-wrapper img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.companion-modal-title-group {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.3125rem;
+    min-width: 0;
+}
+
+.companion-modal-name {
+    font-size: 1.1875rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+
+.companion-modal-badges {
+    display: flex;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.companion-modal-tag {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 0.375rem;
+    line-height: 1.4;
+}
+
+.companion-modal-hold-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.companion-modal-hold-row.is-empty .companion-modal-hold-value {
+    color: #cbd5e1;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.companion-modal-hold-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.companion-modal-hold-value {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #b45309;
+    text-align: right;
+}
+
+.companion-modal-position {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.6875rem;
+    color: #cbd5e1;
+    font-weight: 700;
+}
+
+.companion-modal-effect {
+    margin: 0 0 1.25rem;
+    font-size: 0.9375rem;
+    color: #334155;
+    line-height: 1.65;
+    white-space: pre-line;
+}
+
+.companion-modal-effect.is-empty {
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .companion-grid {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 10px;
+    }
+    .companion-card {
+        padding: 8px 6px;
+        overflow: visible;
+        min-height: 108px;
+    }
+    .companion-icon {
+        width: 36px;
+        height: 36px;
+    }
+    .companion-type-badge {
+        font-size: 0.5625rem;
+        padding: 0.1rem 0.4rem;
+    }
+    .companion-name {
+        font-size: 0.625rem;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+    .companion-modal-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+    .companion-modal-name {
+        font-size: 1.0625rem;
+    }
+    .companion-modal-arrow {
+        position: absolute;
+        top: auto;
+        bottom: -3.5rem;
+        transform: none;
+    }
+    .companion-modal-arrow-left {
+        left: 0;
+    }
+    .companion-modal-arrow-right {
+        right: 0;
+    }
+    .companion-modal-card {
+        margin-bottom: 3.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .companion-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    .companion-card {
+        padding: 6px 4px;
+        min-height: 96px;
+    }
+    .companion-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .companion-name {
+        font-size: 0.5625rem;
+    }
+    .companion-modal-img-wrapper {
+        width: 64px;
+        height: 64px;
+    }
+    .companion-modal-img-wrapper img {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+
+/* ==========================================================================
+   11. Star-State: 성급별 별 모양/개수 변화 안내 (동료 도감 전용 물음표 버튼 + 모달)
+   ========================================================================== */
+
+.star-state-fab {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -4px rgba(239, 68, 68, 0.45);
+    z-index: 40;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.star-state-fab:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 24px -4px rgba(239, 68, 68, 0.55);
+}
+
+.star-state-fab.hidden {
+    display: none !important;
+}
+
+.star-state-modal-card {
+    max-width: 40rem;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.star-state-header {
+    margin-bottom: 1.25rem;
+}
+
+.star-state-title {
+    display: block;
+    font-size: 1.1875rem;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 0.375rem;
+}
+
+.star-state-desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.star-state-tier-block {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.star-state-tier-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.star-state-tier-label {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    display: inline-block;
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+}
+
+.star-state-tier-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.625rem;
+}
+
+.star-state-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.375rem;
+}
+
+.star-state-icon-wrap {
+    width: 100%;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.star-state-icon {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.star-state-level {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+@media (max-width: 480px) {
+    .star-state-fab {
+        right: 1rem;
+        bottom: 1rem;
+        width: 2.625rem;
+        height: 2.625rem;
+        font-size: 1.0625rem;
+    }
+    .star-state-tier-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.375rem;
+    }
+    .star-state-cell {
+        padding: 0.4rem 0.25rem;
+    }
+    .star-state-icon-wrap {
+        height: 2.125rem;
+    }
+    .star-state-level {
+        font-size: 0.5625rem;
     }
 }
