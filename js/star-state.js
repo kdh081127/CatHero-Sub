@@ -24,6 +24,11 @@ function starStateImagePath(level) {
     return `${STAR_STATE_IMAGE_BASE}st_${padded}.png`;
 }
 
+function starStateShardCount(level) {
+    // 성급 승급에 필요한 조각 수 = 성급 × 5 (1성=5조각 ~ 25성=125조각)
+    return level * 5;
+}
+
 function renderStarStateModal() {
     const body = document.getElementById("star-state-modal-body");
     if (!body) return;
@@ -37,6 +42,7 @@ function renderStarStateModal() {
                         <img src="${starStateImagePath(level)}" alt="${level}성" class="star-state-icon" loading="lazy" onerror="this.style.opacity=0.15">
                     </div>
                     <span class="star-state-level">${level}성</span>
+                    <span class="star-state-shard">${starStateShardCount(level)}조각</span>
                 </div>
             `);
         }
