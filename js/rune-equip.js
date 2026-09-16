@@ -127,7 +127,9 @@ function selectRunePickerGrade(grade) {
 function renderRunePickerGrid() {
     const grid = document.getElementById("rune-picker-grid");
     if (!grid || !runePickerContext) return;
-    grid.style.cssText = "display:grid;grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));gap:14px;padding:2px;";
+    // 예전엔 여기서 grid-template-columns를 인라인으로 고정(150px)해서
+    // 모바일에서 CSS의 반응형 그리드 규칙(#rune-picker-grid 미디어쿼리)을
+    // 덮어써버리는 문제가 있었습니다. 이제 CSS 클래스(.rune-grid)에 맡깁니다.
 
     const { slotType, slotIndex } = runePickerContext;
     const equippedArray = slotType === "main" ? userState.equippedMainRunes : userState.equippedSubRunes;

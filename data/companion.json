@@ -342,6 +342,17 @@
         "special-effect": ""
     },
     {
+        "id": "epic_companion",
+        "type": "",
+        "size": "",
+        "name": "콩",
+        "image": "assets/companion/epic/c.3-19.png",
+        "grade": "epic",
+        "holdEffect": "",
+        "companion-experience": "",
+        "special-effect": ""
+    },
+    {
         "id": "legendary_companion",
         "type": "",
         "size": "",

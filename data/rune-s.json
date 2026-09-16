@@ -1209,7 +1209,7 @@
         "type": "sub-rune",
         "name": "해적 치명타 강화",
         "image": "assets/runes/sub-runes/legendary/s.4-45.png",
-        "grade": "mythic",
+        "grade": "legendary",
         "effect": "장착한 해적 동료 하나 당 치명타로 입히는 피해가 150% 증가합니다.",
         "holdEffect": "공격력 증폭 +100%"
     },
