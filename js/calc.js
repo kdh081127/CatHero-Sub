@@ -1,92 +1,18 @@
 /**
- * calc.js - 명중/회피 실험 탭 로직
+ * calc.js - 덱 구성 추천 계산 로직 (준비 중)
  * ----------------------------------------------------------------------
- * DPS 계산기는 유저 설문(500명 중 약 80%가 불필요 응답) 결과에 따라 제거되었고,
- * 대신 아래 두 계산기로 대체되었습니다.
- *   1) 회피 덱 - 타수 계산기 (calcEvasionHits)
- *   2) 명중 덱 - 방관 기준 딜 계산기 (calcAccuracyDamage)
+ * 예전에는 이 파일이 PVP 명중/회피 실험(회피 타수 계산기, 방어관통 딜 계산기)
+ * 로직을 담고 있었지만, 해당 기능은 전면 삭제하고 "덱 구성 추천" 기능으로
+ * 방향을 바꿨습니다.
  *
- * ⚠️ 아직 캣 히어로의 실제 명중/회피/방관 공식이 확정되지 않았습니다.
- *    아래 계산 로직은 자리를 잡아두기 위한 임시(placeholder) 공식이며,
- *    실측 데이터로 검증되는 대로 교체될 예정입니다.
+ * 덱 구성 추천 로직은 companion.json / 룬 데이터가 다 채워진 뒤에 이 파일에
+ * 채워 넣을 예정입니다. 설계 방향은 index.html의 #panel-deck-recommend
+ * 안내 박스에 정리되어 있습니다 (공격력 100/1 고정, 12성·25성·10각 기준점).
+ *
+ * 아래 유틸 함수들은 이전 계산기에서도 쓰던 범용 헬퍼라 그대로 남겨뒀습니다.
  * ----------------------------------------------------------------------
  */
 
-const EXPERIMENT_TAB_STORAGE_PATCH_KEY = "experimentTab";
-
-/* ==========================================================================
-   0. 하위 탭(회피 / 명중) 전환
-   ========================================================================== */
-function switchExperimentTab(tabName) {
-    if (!EXPERIMENT_SUB_TABS.includes(tabName)) tabName = "evasion";
-
-    EXPERIMENT_SUB_TABS.forEach((name) => {
-        const panel = document.getElementById("panel-" + name);
-        if (panel) panel.classList.toggle("hidden", name !== tabName);
-
-        const btn = document.getElementById("subtab-" + name);
-        if (btn) btn.classList.toggle("active", name === tabName);
-    });
-
-    if (typeof saveUiState === "function") {
-        saveUiState({
-            [EXPERIMENT_TAB_STORAGE_PATCH_KEY]: tabName });
-    }
-}
-
-/* ==========================================================================
-   1. 회피 덱 - 타수 계산기
-   ----------------------------------------------------------------------
-   입력: 회피율(%), 상대 명중 보정(%), 시뮬레이션 타수
-   출력(임시): 예상 회피 타수 / 예상 피격 타수
-   ========================================================================== */
-function calcEvasionHits() {
-    const evasionRate = getNumberInput("evasion-rate-input");
-    const enemyAccuracy = getNumberInput("evasion-enemy-accuracy-input");
-    const totalHits = getNumberInput("evasion-hit-count-input");
-
-    // TODO: 실제 게임 내 회피 판정 공식으로 교체 필요.
-    // 임시 공식: 최종 회피율 = 회피율 - 상대 명중 보정 (0~100% 사이로 clamp)
-    const finalEvasionRate = clamp(evasionRate - enemyAccuracy, 0, 100);
-    const dodgedHits = Math.round((finalEvasionRate / 100) * totalHits);
-    const takenHits = totalHits - dodgedHits;
-
-    renderResultBox("evasion-result-box", [
-        { label: "적용 회피율 (임시 공식)", value: `${finalEvasionRate.toFixed(1)}%` },
-        { label: "예상 회피 타수", value: `${dodgedHits} / ${totalHits}` },
-        { label: "예상 피격 타수", value: `${takenHits} / ${totalHits}` },
-    ], "이 결과는 확정된 게임 공식이 아닌 임시 추정치입니다.");
-}
-
-/* ==========================================================================
-   2. 명중 덱 - 방관 기준 딜 계산기
-   ----------------------------------------------------------------------
-   입력: 명중률(%), 방어 관통(방관) 수치, 상대 방어력
-   출력(임시): 방관 적용 후 유효 방어력 / 데미지 배율
-   ========================================================================== */
-function calcAccuracyDamage() {
-    const accuracyRate = getNumberInput("accuracy-rate-input");
-    const penetration = getNumberInput("accuracy-penetration-input");
-    const enemyDefense = getNumberInput("accuracy-enemy-defense-input");
-
-    // TODO: 실제 게임 내 방관/명중 데미지 공식으로 교체 필요.
-    // 임시 공식: 유효 방어력 = max(상대 방어력 - 방관 수치, 0)
-    //           데미지 배율 = 100 / (100 + 유효 방어력) * (명중률/100 보정)
-    const effectiveDefense = Math.max(enemyDefense - penetration, 0);
-    const rawMultiplier = 100 / (100 + effectiveDefense);
-    const accuracyFactor = clamp(accuracyRate, 0, 100) / 100;
-    const finalMultiplier = rawMultiplier * accuracyFactor;
-
-    renderResultBox("accuracy-result-box", [
-        { label: "방관 적용 후 유효 방어력 (임시 공식)", value: `${effectiveDefense}` },
-        { label: "명중 보정 전 데미지 배율", value: `${(rawMultiplier * 100).toFixed(1)}%` },
-        { label: "최종 데미지 배율", value: `${(finalMultiplier * 100).toFixed(1)}%` },
-    ], "이 결과는 확정된 게임 공식이 아닌 임시 추정치입니다.");
-}
-
-/* ==========================================================================
-   공용 유틸
-   ========================================================================== */
 function getNumberInput(id) {
     const el = document.getElementById(id);
     const value = el ? parseFloat(el.value) : 0;
@@ -97,11 +23,25 @@ function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
 
-function renderResultBox(boxId, rows, footnote) {
+function renderResultBox(boxId, rows, footnote, gauge) {
     const box = document.getElementById(boxId);
     if (!box) return;
 
+    const gaugePct = gauge ? clamp(gauge.percent, 0, 100) : 0;
+    const gaugeHtml = gauge ? `
+        <div class="result-gauge-row">
+            <div class="result-gauge" style="--gauge-pct: ${gaugePct};">
+                <span class="result-gauge-value">${gauge.percent.toFixed(1)}%</span>
+            </div>
+            <div class="result-gauge-caption">
+                <span class="result-gauge-label">${gauge.label}</span>
+                <span class="result-gauge-desc">${gauge.desc || ""}</span>
+            </div>
+        </div>
+    ` : "";
+
     box.innerHTML = `
+        ${gaugeHtml}
         <div class="result-rows">
             ${rows.map((r) => `
                 <div class="result-row">
@@ -114,3 +54,7 @@ function renderResultBox(boxId, rows, footnote) {
     `;
     box.classList.remove("hidden");
 }
+
+/* ==========================================================================
+   TODO: 덱 구성 추천 계산 함수는 companion.json 완성 후 여기에 구현
+   ========================================================================== */

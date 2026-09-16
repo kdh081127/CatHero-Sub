@@ -9,80 +9,6 @@
     <!-- 외부 커스텀 CSS 연결 -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
-
-    <!--
-        아래는 이번에 새로 추가된 "명중/회피 실험" 하위 탭 & 결과 박스용 임시 스타일입니다.
-        css/main.css 또는 css/components.css 파일을 확인하지 못한 상태라 우선 인라인으로 넣어뒀으니,
-        기존 CSS 파일에 맞춰 옮기거나 다듬어 주세요.
-    -->
-    <style>
-        .sub-tab-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-        }
-        
-        .sub-tab-btn {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        
-        .sub-tab-btn.active {
-            background: #fff7ed;
-            border-color: #f59e0b;
-            color: #b45309;
-        }
-        
-        .experiment-panel.hidden {
-            display: none;
-        }
-        
-        .result-box {
-            margin-top: 1rem;
-            padding: 1rem 1.25rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background: #f8fafc;
-        }
-        
-        .result-box.hidden {
-            display: none;
-        }
-        
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.4rem 0;
-            border-bottom: 1px dashed #e2e8f0;
-            font-size: 0.9rem;
-        }
-        
-        .result-row:last-child {
-            border-bottom: none;
-        }
-        
-        .result-label {
-            color: #64748b;
-        }
-        
-        .result-value {
-            font-weight: 700;
-            color: #0f172a;
-        }
-        
-        .result-footnote {
-            margin-top: 0.6rem;
-            font-size: 0.75rem;
-            color: #b45309;
-        }
-    </style>
 </head>
 
 <body class="app-container">
@@ -93,28 +19,12 @@
             <div class="logo">
                 🐾 CatHero LAB
             </div>
-            <div class="divider"></div>
-
-            <!-- 타깃 콘텐츠 글로벌 선택 -->
-            <div class="target-select-group">
-                <label for="global-target" class="target-label">Target:</label>
-                <select id="global-target" class="target-select">
-                    <option value="upper_boss">격전지 상층 보스</option>
-                    <option value="cthulhu">길드전 크툴루 레이드</option>
-                    <option value="nocturne">녹턴의 시험</option>
-                    <option value="blood_nocturne">블러드녹턴 레이드</option>
-                    <option value="arena">아레나 (PVP)</option>
-                </select>
-            </div>
         </div>
 
         <!-- 상단 정보 페이지 탭 네비게이션 -->
         <nav class="info-nav-bar">
-            <button type="button" id="gnb-experiment" class="info-nav-btn active" onclick="switchMainView('experiment')">명중/회피 실험</button>
-            <button type="button" id="gnb-companions" class="info-nav-btn" onclick="switchMainView('companions')">동료 도감</button>
-            <button type="button" id="gnb-skills" class="info-nav-btn" onclick="switchMainView('skills')">스킬 도감</button>
-            <button type="button" id="gnb-runes" class="info-nav-btn" onclick="switchMainView('runes')">룬 도감</button>
-            <button type="button" id="gnb-contents" class="info-nav-btn" onclick="switchMainView('contents')">콘텐츠 공략</button>
+            <button type="button" id="gnb-deckbuilder" class="info-nav-btn active" onclick="switchMainView('deckbuilder')">덱 구성 추천</button>
+            <button type="button" id="gnb-soulstone" class="info-nav-btn" onclick="switchMainView('soulstone')">냥혼석 세공</button>
         </nav>
 
         <!-- 헤더 우측 메뉴 (프리셋 퀵 컨트롤러) -->
@@ -143,21 +53,12 @@
         <main class="content-area">
             <div class="content-container">
 
-                <div id="view-experiment">
+                <div id="view-deckbuilder">
                     <!-- 안내 문구 카드 -->
-
-
-                    <!-- 명중/회피 실험 하위 탭 스위처 -->
-                    <div class="sub-tab-bar" id="experiment-sub-tabs">
-                        <button type="button" id="subtab-evasion" class="sub-tab-btn active" onclick="switchExperimentTab('evasion')">
-                            회피 덱 · 타수 계산기
-                        </button>
-                        <button type="button" id="subtab-accuracy" class="sub-tab-btn" onclick="switchExperimentTab('accuracy')">
-                            명중 덱 · 방관 기준 딜 계산기
-                        </button>
+                    <div class="info-card">
+                        <span>아래 1~3번 항목(캐릭터·동료·룬)을 채우면, 조합만으로 나오는 딜 배율을 기준으로 <b>덱 구성 추천</b> 결과를 보여줍니다. (공격력은 100 또는 1로 고정 — 순수 조합 효율만 비교)</span>
+                        <span class="info-version">v0.1.0-draft</span>
                     </div>
-
-                    <!-- 섹션 빠른 이동 네비게이션 (사이드바 대신) -->
 
                     <!-- TAB 1: 캐릭터 & 전직 -->
                     <section id="tab-character" class="tab-content">
@@ -181,7 +82,19 @@
                         <h2 class="section-title">
                             2. 동료, 탈것 및 가디언
                         </h2>
-                        <p class="placeholder-text">동료 캐릭터 성급 및 가디언 버프 옵션 입력 창입니다.</p>
+
+                        <div class="equip-block">
+                            <div class="equip-block-head">
+                                <span class="equip-block-title">동료</span>
+                                <span class="equip-count-badge" id="companion-slot-count-badge">0 / 6</span>
+                            </div>
+                            <div id="companion-slot-grid" class="equip-slot-grid">
+                                <!-- js/companion-equip.js가 슬롯을 렌더링합니다 -->
+                            </div>
+                            <p class="placeholder-text">🔒 표시가 붙은 동료는 "고유" 태그가 있는 동료로, 덱 전체에서 1마리만 장착할 수 있습니다.</p>
+                        </div>
+
+                        <p class="placeholder-text">탈것 및 가디언 설정 영역은 준비 중입니다.</p>
                     </section>
 
                     <!-- TAB 3: 룬 & 냥혼석 (초기 숨김) -->
@@ -238,157 +151,94 @@
                         </div>
                     </div>
 
-                    <!-- 실험 패널 1: 회피 덱 - 타수 계산기 -->
-                    <section id="panel-evasion" class="experiment-panel">
+                    <!-- 동료 선택 피커 모달 -->
+                    <div id="companion-picker-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeCompanionPicker()">
+                        <div class="modal-card companion-picker-modal-card">
+                            <div class="modal-header">
+                                <h3 class="modal-title">동료 선택</h3>
+                                <button type="button" class="modal-close-btn" onclick="closeCompanionPicker()">✕</button>
+                            </div>
+
+                            <div class="db-filter-bar">
+                                <div class="filter-group">
+                                    <input type="text" id="companion-picker-search-input" class="form-input" style="width: 220px;" placeholder="🔍 동료 이름으로 검색..." oninput="filterCompanionPicker('search', this.value)">
+                                </div>
+                                <div class="filter-group" id="companion-picker-grade-filter">
+                                    <!-- js/companion-equip.js가 등급 버튼을 채웁니다 -->
+                                </div>
+                            </div>
+
+                            <div id="companion-picker-grid" class="companion-picker-grid">
+                                <!-- js/companion-equip.js가 선택 가능한 동료 목록을 렌더링합니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 덱 구성 추천 결과 (로직 준비 중) -->
+                    <section id="panel-deck-recommend" class="tab-content">
                         <h2 class="section-title">
-                            회피 덱 · 타수 계산기
+                            🧮 덱 구성 추천 결과
                         </h2>
-                        <p class="placeholder-text">회피율/속도 등 회피 관련 스탯을 기준으로, 몇 타를 회피하고 몇 타를 맞는지 계산합니다. (로직 준비 중)</p>
-                        <div class="form-grid">
-                            <div>
-                                <label class="form-label">회피율 (%)</label>
-                                <input type="number" id="evasion-rate-input" value="0" class="form-input">
-                            </div>
-                            <div>
-                                <label class="form-label">상대 명중 보정 (%)</label>
-                                <input type="number" id="evasion-enemy-accuracy-input" value="0" class="form-input">
-                            </div>
-                            <div>
-                                <label class="form-label">시뮬레이션 타수</label>
-                                <input type="number" id="evasion-hit-count-input" value="100" class="form-input">
-                            </div>
+                        <p class="placeholder-text">동료/스킬/룬 조합에 따른 딜 배율을 계산해서 추천 덱을 보여줄 예정입니다. (로직 준비 중)</p>
+
+                        <div class="deck-plan-note">
+                            <div class="deck-plan-note-title">📌 설계 기준 (진행 중인 방향)</div>
+                            <ul class="deck-plan-note-list">
+                                <li>공격력은 100 또는 1로 고정 — 오로지 동료·스킬·룬 조합 자체의 배율만으로 딜량 비교</li>
+                                <li>성급/등급은 <b>12성 · 25성 · 10각</b> 정도의 기준점만 두고 비교 (13~24성처럼 세밀한 구간별 계산은 생략 — 13성 이후부턴 기존 효과 수치만 증가하고 새 효과는 추가되지 않기 때문)</li>
+                                <li>룬 도감 · 동료 도감의 데이터(rune 데이터, companion.json)는 그대로 재사용, 별도의 열람용 도감 페이지는 두지 않음</li>
+                            </ul>
                         </div>
 
-                        <button type="button" class="btn-submit" onclick="calcEvasionHits()">
-                            타수 계산 실행 및 결과 보기
+                        <button type="button" class="btn-submit" disabled>
+                            덱 구성 추천 받기 (데이터 준비 중)
                         </button>
-
-                        <div id="evasion-result-box" class="result-box hidden">
-                            <!-- calc.js가 결과를 렌더링합니다 -->
-                        </div>
                     </section>
+                </div>
+                <!-- /view-deckbuilder -->
 
-                    <!-- 실험 패널 2: 명중 덱 - 방관 기준 딜 계산기 -->
-                    <section id="panel-accuracy" class="experiment-panel hidden">
-                        <h2 class="section-title">
-                            🎯 명중 덱 · 방관 기준 딜 계산기
-                        </h2>
-                        <p class="placeholder-text">명중 스탯과 방어 관통(방관) 수치를 기준으로 실제 적용되는 데미지를 계산합니다. (로직 준비 중)</p>
-                        <div class="form-grid">
-                            <div>
-                                <label class="form-label">명중률 (%)</label>
-                                <input type="number" id="accuracy-rate-input" value="0" class="form-input">
+                <!-- 냥혼석 세공 뷰 -->
+                <div id="view-soulstone" class="hidden">
+                    <div class="page-hero-lite">
+                        <h2 class="section-title">💎 냥혼석 세공</h2>
+                        <p class="placeholder-text">증가능력1 / 증가능력2 / 감소능력1, 매 칸마다 성공·실패를 기록하면 확률이 자동으로 갱신되고, 레벨 달성 확률도 실시간으로 계산됩니다.</p>
+                    </div>
+
+                    <section class="tab-content">
+                        <div class="soulstone-toolbar">
+                            <div class="soulstone-slot-select">
+                                <label for="soulstone-slot-count" class="form-label" style="margin-bottom:0;">칸수</label>
+                                <select id="soulstone-slot-count" class="form-select" style="width:auto;" onchange="changeSoulstoneSlotCount(this.value)">
+                                    <option value="10" selected>10칸</option>
+                                </select>
                             </div>
-                            <div>
-                                <label class="form-label">방어력 관통(방관) 수치</label>
-                                <input type="number" id="accuracy-penetration-input" value="0" class="form-input">
-                            </div>
-                            <div>
-                                <label class="form-label">상대 방어력</label>
-                                <input type="number" id="accuracy-enemy-defense-input" value="0" class="form-input">
+                            <div class="soulstone-toolbar-actions">
+                                <button type="button" class="soulstone-toolbar-btn" onclick="undoSoulstoneLast()">↩ 취소</button>
+                                <button type="button" class="soulstone-toolbar-btn primary" onclick="resetSoulstone()">🔄 초기화</button>
                             </div>
                         </div>
 
-                        <button type="button" class="btn-submit" onclick="calcAccuracyDamage()">
-                            방관 기준 딜 계산 실행 및 결과 보기
-                        </button>
+                        <div class="soulstone-global-banner">
+                            <span id="soulstone-global-prob">세공 확률 75%</span>
+                        </div>
 
-                        <div id="accuracy-result-box" class="result-box hidden">
-                            <!-- calc.js가 결과를 렌더링합니다 -->
+                        <div id="soulstone-rows" class="soulstone-rows">
+                            <!-- js/soulstone.js가 증가능력1 / 증가능력2 / 감소능력1 행을 렌더링합니다 -->
+                        </div>
+
+                        <div class="deck-plan-note">
+                            <div class="deck-plan-note-title">📌 세공 규칙</div>
+                            <ul class="deck-plan-note-list">
+                                <li>각 옵션(증가능력1 · 증가능력2 · 감소능력1)마다 10번의 기회가 주어집니다.</li>
+                                <li>세공 확률은 <b>3개 옵션이 전부 공유</b>합니다 — 어느 옵션에서 성공하든 전체 확률이 -10%p, 실패하면 +10%p (예: 증가능력1 성공 65% → 증가능력2 성공 55% → 다음 실패 시 다시 65%).</li>
+                                <li>세공 확률은 75%에서 시작하며, 최저 25% · 최고 75%로 고정됩니다.</li>
+                                <li>레벨 1은 3번 성공, 레벨 2는 6번 성공, 레벨 3은 9번 성공 시 달성됩니다 (옵션별로 각자 카운트).</li>
+                                <li>감소능력1은 어떤 냥혼석이든 고정적으로 존재하는 옵션입니다.</li>
+                            </ul>
                         </div>
                     </section>
                 </div>
-                <!-- /view-experiment -->
-
-                <!-- 룬 도감 뷰 -->
-                <section id="view-runes" class="tab-content hidden">
-                    <div class="db-header">
-                        <h2 class="section-title">룬 도감 (Rune Database)</h2>
-                        <p class="placeholder-text">메인/서브 룬의 등급별 효과 및 빌드별 추천 룬 정보를 확인하세요.</p>
-                    </div>
-
-                    <!-- 룬 필터 컨트롤러 -->
-                    <div class="db-filter-bar">
-                        <!-- 검색 필드 -->
-                        <div class="filter-group">
-                            <input type="text" id="rune-search-input" class="form-input" style="width: 220px;" placeholder="🔍 룬 이름으로 검색..." oninput="filterRunes('search', this.value)">
-                        </div>
-
-                        <!-- 메인/서브 구분 필터 -->
-                        <div class="filter-group">
-                            <button class="filter-btn active" onclick="filterRunes('type', 'all')">전체</button>
-                            <button class="filter-btn" onclick="filterRunes('type', 'main')">메인 룬</button>
-                            <button class="filter-btn" onclick="filterRunes('type', 'sub')">서브 룬</button>
-                        </div>
-
-                        <!-- 등급 필터 (커먼 ~ 초월) -->
-                        <div class="filter-group">
-                            <select id="rune-grade-filter" class="form-select" style="width: auto;" onchange="filterRunes('grade', this.value)">
-                                <option value="all">모든 등급 보기</option>
-                                <option value="uncommon">언커먼 (Uncommon)</option>
-                                <option value="rare">레어 (Rare)</option>
-                                <option value="epic">에픽 (Epic)</option>
-                                <option value="legendary">전설 (Legendary)</option>
-                                <option value="mythic">신화 (Mythic)</option>
-                                <option value="ascension">초월 (Ascension)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- [수정] 룬 카드 리스트 출력 영역 -->
-                    <div id="rune-card-grid" class="rune-grid">
-                        <!-- js/rune.js 및 fetcher.js에 의해 동적으로 렌더링됩니다 -->
-                    </div>
-                </section>
-
-                <!-- 동료 도감 뷰 -->
-                <section id="view-companions" class="tab-content hidden">
-                    <div class="db-header">
-                        <h2 class="section-title">동료 도감 (Companion Database)</h2>
-                        <p class="placeholder-text">등급별 동료 목록과 보유 효과, 특수 효과를 확인하세요.</p>
-                    </div>
-
-                    <!-- 동료 필터 컨트롤러 -->
-                    <div class="db-filter-bar">
-                        <!-- 검색 필드 -->
-                        <div class="filter-group">
-                            <input type="text" id="companion-search-input" class="form-input" style="width: 220px;" placeholder="🔍 동료 이름으로 검색..." oninput="filterCompanions('search', this.value)">
-                        </div>
-
-                        <!-- 등급 필터 -->
-                        <div class="filter-group">
-                            <select id="companion-grade-filter" class="form-select" style="width: auto;" onchange="filterCompanions('grade', this.value)">
-                                <option value="all">모든 등급 보기</option>
-                                <option value="uncommon">언커먼 (Uncommon)</option>
-                                <option value="rare">레어 (Rare)</option>
-                                <option value="epic">에픽 (Epic)</option>
-                                <option value="legendary">전설 (Legendary)</option>
-                                <option value="mythic">신화 (Mythic)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- 동료 카드 리스트 출력 영역 -->
-                    <div id="companion-card-grid" class="companion-grid">
-                        <!-- js/companion.js에 의해 동적으로 렌더링됩니다 -->
-                    </div>
-                </section>
-
-                <!-- 스킬 도감 뷰 (준비 중) -->
-                <section id="view-skills" class="tab-content hidden">
-                    <div class="db-header">
-                        <h2 class="section-title">스킬 도감</h2>
-                    </div>
-                    <div class="coming-soon-card">스킬 도감은 준비 중입니다.</div>
-                </section>
-
-                <!-- 콘텐츠 공략 뷰 (준비 중) -->
-                <section id="view-contents" class="tab-content hidden">
-                    <div class="db-header">
-                        <h2 class="section-title">콘텐츠 공략</h2>
-                    </div>
-                    <div class="coming-soon-card">🚧 콘텐츠 공략은 준비 중입니다.</div>
-                </section>
+                <!-- /view-soulstone -->
 
             </div>
         </main>
@@ -417,43 +267,7 @@
         </div>
     </div>
 
-    <!-- 룬 상세정보 모달 (룬 도감 카드 클릭 시 표시) -->
-    <div id="rune-detail-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeRuneModal()">
-        <div class="modal-card rune-modal-card">
-            <button type="button" class="modal-close-btn rune-modal-close" onclick="closeRuneModal()">✕</button>
-
-            <button type="button" class="rune-modal-arrow rune-modal-arrow-left" id="rune-modal-prev" onclick="navigateRuneModal(-1)" title="이전 룬 (←)">
-                ◀
-            </button>
-            <button type="button" class="rune-modal-arrow rune-modal-arrow-right" id="rune-modal-next" onclick="navigateRuneModal(1)" title="다음 룬 (→)">
-                ▶
-            </button>
-
-            <div id="rune-modal-body" class="rune-modal-body">
-                <!-- js/rune.js의 openRuneModal()에 의해 동적으로 채워집니다 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 동료 상세정보 모달 (동료 도감 카드 클릭 시 표시) -->
-    <div id="companion-detail-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeCompanionModal()">
-        <div class="modal-card companion-modal-card">
-            <button type="button" class="modal-close-btn companion-modal-close" onclick="closeCompanionModal()">✕</button>
-
-            <button type="button" class="companion-modal-arrow companion-modal-arrow-left" id="companion-modal-prev" onclick="navigateCompanionModal(-1)" title="이전 동료 (←)">
-                ◀
-            </button>
-            <button type="button" class="companion-modal-arrow companion-modal-arrow-right" id="companion-modal-next" onclick="navigateCompanionModal(1)" title="다음 동료 (→)">
-                ▶
-            </button>
-
-            <div id="companion-modal-body" class="companion-modal-body">
-                <!-- js/companion.js의 openCompanionModal()에 의해 동적으로 채워집니다 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 동료 도감 전용: 우하단 "성급 변화" 물음표 버튼 (동료 도감 뷰에서만 표시) -->
+    <!-- 덱 구성 추천 페이지 전용: 우하단 "성급 변화" 물음표 버튼 (덱 구성 추천 뷰에서만 표시) -->
     <button type="button" id="star-state-fab" class="star-state-fab hidden" onclick="openStarStateModal()" title="성급별 별 모양 및 개수 변화 보기">
         ?
     </button>
@@ -474,7 +288,9 @@
     <script src="js/fetcher.js"></script>
     <script src="js/rune.js"></script>
     <script src="js/companion.js"></script>
+    <script src="js/companion-equip.js"></script>
     <script src="js/star-state.js"></script>
+    <script src="js/soulstone.js"></script>
     <script src="js/rune-equip.js"></script>
     <script src="js/preset.js"></script>
     <script src="js/calc.js"></script>

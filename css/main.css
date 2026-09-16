@@ -2472,3 +2472,684 @@ html {
         padding: 0.02rem 0.375rem;
     }
 }
+
+
+/* ==========================================================================
+   12. 덱 구성 추천 - 설계 기준 안내 박스 (로직 준비 중 placeholder)
+   ========================================================================== */
+
+.deck-plan-note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 0.875rem;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+}
+
+.deck-plan-note-title {
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #92400e;
+    margin-bottom: 0.5rem;
+}
+
+.deck-plan-note-list {
+    margin: 0;
+    padding-left: 1.125rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    color: #78350f;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   13. 냥혼석 세공 (Soul Stone Crafting) 시뮬레이터 / 확률 계산기
+   ========================================================================== */
+
+.page-hero-lite {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.25rem;
+}
+
+.soulstone-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.soulstone-slot-select {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.soulstone-toolbar-actions {
+    display: flex;
+    gap: 0.625rem;
+}
+
+.soulstone-toolbar-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.12s ease;
+}
+
+.soulstone-toolbar-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.soulstone-toolbar-btn.primary {
+    background: #fff7ed;
+    border-color: #fdba74;
+    color: #b45309;
+}
+
+.soulstone-toolbar-btn.primary:hover {
+    background: #ffedd5;
+    border-color: #f59e0b;
+}
+
+.soulstone-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+/* ---- 카드 한 장 = 한 줄(증가능력1 등): 라벨 - 핀트랙 - 버튼을 전부 한 줄에 배치 ---- */
+
+.soulstone-row {
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+}
+
+.soulstone-row-main {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.soulstone-row-label-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    min-width: 4.5rem;
+}
+
+.soulstone-row-label {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.soulstone-row-substatus {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.soulstone-global-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0;
+    margin-bottom: 0.875rem;
+}
+
+#soulstone-global-prob {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.01em;
+}
+
+.soulstone-row-level {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    color: #94a3b8;
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 0.125rem 0.5rem;
+    white-space: nowrap;
+}
+
+.soulstone-row-level.on {
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+}
+
+.soulstone-row-count {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+
+/* ---- 핀 트랙(내용 크기만큼만) + 버튼(오른쪽, 높이 꽉 채워 균등 배치), 서로 30px 간격 ---- */
+
+.soulstone-row-pips-actions {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 2.875rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.soulstone-row-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding-left: 0.875rem;
+    border-left: 1px dashed #e2e8f0;
+}
+
+.soulstone-small-btn {
+    flex: 1;
+    width: 5.5rem;
+    padding: 0.625rem 0;
+    border-radius: 0.625rem;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+
+.soulstone-small-btn:hover:not(:disabled) {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.soulstone-small-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+
+/* ---- 핀(마름모) 트랙 + 그 아래 레벨 달성 위치 마커, 같은 gap으로 줄맞춤 ---- */
+
+.soulstone-pip-track {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+}
+
+.soulstone-pip-row,
+.soulstone-pip-markers {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: nowrap;
+}
+
+.soulstone-pip-markers {
+    margin-top: 0.25rem;
+}
+
+.soulstone-pip {
+    width: 1.625rem;
+    height: 1.625rem;
+    border: 2px solid #93c5fd;
+    border-radius: 0.25rem;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    position: relative;
+    background: #ffffff;
+    transition: all 0.12s ease;
+}
+
+.soulstone-pip.down {
+    border-color: #fca5a5;
+}
+
+.soulstone-pip.success {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.soulstone-pip.down.success {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.soulstone-pip.fail {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.soulstone-pip.success::after,
+.soulstone-pip.fail::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-45deg);
+    font-size: 0.75rem;
+    font-weight: 900;
+}
+
+.soulstone-pip.success::after {
+    content: "✓";
+    color: #ffffff;
+}
+
+.soulstone-pip.fail::after {
+    content: "✕";
+    color: #94a3b8;
+    font-size: 0.625rem;
+}
+
+.soulstone-marker-cell {
+    width: 1.625rem;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 800;
+    color: transparent;
+}
+
+.soulstone-marker-cell.has-mark {
+    color: #b45309;
+}
+
+
+/* ---- 반응형: 좁은 화면에서는 라벨/버튼은 고정, 핀 트랙만 가로 스크롤 ---- */
+
+@media (max-width: 768px) {
+    .soulstone-row {
+        padding: 0.875rem 1rem;
+    }
+    .soulstone-row-main {
+        gap: 0.875rem;
+    }
+    .soulstone-row-label-cell {
+        min-width: 3.5rem;
+    }
+    .soulstone-row-label {
+        font-size: 0.8125rem;
+        white-space: normal;
+        line-height: 1.2;
+    }
+    .soulstone-row-pips-actions {
+        gap: 0.875rem;
+    }
+    .soulstone-pip {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+    .soulstone-marker-cell {
+        width: 1.25rem;
+        font-size: 0.5625rem;
+        flex-shrink: 0;
+    }
+    .soulstone-pip-row,
+    .soulstone-pip-markers {
+        gap: 0.625rem;
+    }
+    .soulstone-row-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .soulstone-small-btn {
+        width: 3.5rem;
+        padding: 0.5rem 0;
+        font-size: 0.75rem;
+    }
+    .soulstone-toolbar {
+        flex-wrap: wrap;
+        gap: 0.625rem;
+    }
+    .soulstone-toolbar-btn {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .soulstone-row-main {
+        gap: 0.625rem;
+    }
+    .soulstone-row-label-cell {
+        min-width: 3rem;
+    }
+    .soulstone-row-label {
+        font-size: 0.75rem;
+    }
+    .soulstone-row-substatus {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1875rem;
+    }
+    .soulstone-row-pips-actions {
+        gap: 0.625rem;
+    }
+    .soulstone-pip {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+    .soulstone-marker-cell {
+        width: 1.125rem;
+        font-size: 0.5rem;
+    }
+    .soulstone-small-btn {
+        width: 3rem;
+        font-size: 0.6875rem;
+    }
+}
+
+
+/* ==========================================================================
+   14. 냥혼석 세공 - 모바일 전용 레이아웃 (반응형 대신 완전히 별도 디자인)
+   ----------------------------------------------------------------------
+   데스크톱 카드(회전 마름모 + 한 줄 배치)와 완전히 분리된 마크업/스타일.
+   768px 이하에서는 데스크톱 카드를 숨기고 이 모바일 카드만 보여줍니다.
+   핀은 회전 대신 clip-path로 그려서애초에 겹침 문제가 발생하지 않습니다.
+   ========================================================================== */
+
+.soulstone-row-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .soulstone-row-desktop {
+        display: none;
+    }
+    .soulstone-row-mobile {
+        display: block;
+    }
+}
+
+.ss-m-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.ss-m-label {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.ss-m-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.ss-m-level {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    color: #94a3b8;
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 0.15rem 0.55rem;
+    white-space: nowrap;
+}
+
+.ss-m-level.on {
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+}
+
+.ss-m-count {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+
+/* 5열 x 2행 그리드 - 회전 없이 clip-path로 다이아몬드를 그려서 겹침이 원천적으로 없음 */
+
+.ss-m-pip-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.875rem;
+}
+
+.ss-m-pip-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.ss-m-pip {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: block;
+    background: #ffffff;
+    border: 2px solid #93c5fd;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.ss-m-pip.down {
+    border-color: #fca5a5;
+}
+
+.ss-m-pip.success {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.ss-m-pip.down.success {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.ss-m-pip.fail {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.ss-m-pip-mark {
+    font-size: 0.5625rem;
+    font-weight: 800;
+    color: transparent;
+    line-height: 1;
+}
+
+.ss-m-pip-mark.has-mark {
+    color: #b45309;
+}
+
+.ss-m-actions {
+    display: flex;
+    gap: 0.625rem;
+}
+
+.ss-m-btn {
+    flex: 1;
+    padding: 0.75rem 0;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.9375rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.ss-m-btn:active:not(:disabled) {
+    background: #f1f5f9;
+}
+
+.ss-m-btn:disabled {
+    opacity: 0.4;
+}
+
+@media (max-width: 380px) {
+    .ss-m-pip-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.375rem;
+    }
+    .ss-m-label {
+        font-size: 0.8125rem;
+    }
+}
+
+
+/* ==========================================================================
+   15. 동료 장착 선택 피커 (덱 구성 추천 - 동료 슬롯 클릭 시 뜨는 모달)
+   ----------------------------------------------------------------------
+   룬 피커(.rune-picker-*)와 시각적 언어는 비슷하지만, 클래스는 완전히
+   분리해서 동료 쪽만 독립적으로 손볼 수 있게 했습니다.
+   ========================================================================== */
+
+.companion-picker-modal-card {
+    max-width: 42rem;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.companion-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+    padding: 2px;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+}
+
+.companion-picker-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+}
+
+.companion-picker-grid .companion-picker-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    max-height: none;
+    transition: all 0.12s ease;
+}
+
+.companion-picker-grid .companion-picker-card:hover {
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+}
+
+.companion-picker-grid .companion-picker-card.is-current {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px #fde68a;
+}
+
+.companion-picker-grid .companion-picker-card.is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.companion-picker-grid .companion-picker-card.is-disabled:hover {
+    transform: none;
+    border-color: #e2e8f0;
+}
+
+.companion-picker-img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.companion-picker-icon {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}
+
+.companion-picker-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: center;
+    word-break: keep-all;
+}
+
+.companion-picker-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 999px;
+    z-index: 2;
+}
+
+.companion-picker-badge.current {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.companion-picker-badge.taken {
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+.companion-picker-badge.locked {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+    .companion-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 10px;
+    }
+    .companion-picker-grid .companion-picker-card {
+        padding: 8px 6px;
+    }
+    .companion-picker-icon {
+        width: 36px;
+        height: 36px;
+    }
+    .companion-picker-name {
+        font-size: 0.625rem;
+    }
+}

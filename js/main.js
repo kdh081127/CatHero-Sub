@@ -1,6 +1,5 @@
 const UI_STATE_STORAGE_KEY = "cathero_ui_state";
-const KNOWN_MAIN_VIEWS = ["experiment", "companions", "skills", "runes", "contents"];
-const EXPERIMENT_SUB_TABS = ["evasion", "accuracy"];
+const KNOWN_MAIN_VIEWS = ["deckbuilder", "soulstone"];
 
 // 프리셋 모달 열기/닫기
 function togglePresetModal(show) {
@@ -15,11 +14,11 @@ function togglePresetModal(show) {
 }
 
 /**
- * 상단 메인 GNB 뷰 전환 함수 (명중/회피 실험 / 동료 도감 / 스킬 도감 / 룬 도감 / 콘텐츠 공략)
- * @param {string} viewName - 'experiment' | 'companions' | 'skills' | 'runes' | 'contents'
+ * 상단 메인 GNB 뷰 전환 함수 (덱 구성 추천 / 냥혼석 세공)
+ * @param {string} viewName - 'deckbuilder' | 'soulstone'
  */
 function switchMainView(viewName) {
-    if (!KNOWN_MAIN_VIEWS.includes(viewName)) viewName = "experiment";
+    if (!KNOWN_MAIN_VIEWS.includes(viewName)) viewName = "deckbuilder";
 
     // 1. 모든 뷰 숨기고 선택된 뷰만 표시
     KNOWN_MAIN_VIEWS.forEach((name) => {
@@ -33,7 +32,7 @@ function switchMainView(viewName) {
     const activeGnb = document.getElementById("gnb-" + viewName);
     if (activeGnb) activeGnb.classList.add("active");
 
-    // 3. 동료 도감 전용 "성급 변화" 물음표 버튼 표시/숨김 동기화
+    // 3. "성급 변화" 물음표 버튼 표시/숨김 동기화 (덱 구성 추천 페이지 전용)
     if (typeof updateStarStateFabVisibility === "function") {
         updateStarStateFabVisibility(viewName);
     }
@@ -62,9 +61,6 @@ function saveUiState(patch) {
 function restoreUiState() {
     const state = getUiState();
     if (state.mainView) switchMainView(state.mainView);
-    if (state.experimentTab && typeof switchExperimentTab === "function") {
-        switchExperimentTab(state.experimentTab);
-    }
 }
 
 document.addEventListener("DOMContentLoaded", restoreUiState);
