@@ -55,6 +55,15 @@
     {
         "id": "uncommon_s-rune",
         "type": "sub-rune",
+        "name": "상어 강화",
+        "image": "assets/runes/sub-runes/uncommon/s.1-6.png",
+        "grade": "uncommon",
+        "effect": "장착한 상어 동료 하나 당 상어 타입 스킬의 피해량이 20% 증가합니다.",
+        "holdEffect": "공격력 증폭 +10%"
+    },
+    {
+        "id": "uncommon_s-rune",
+        "type": "sub-rune",
         "name": "보스공략",
         "image": "assets/runes/sub-runes/uncommon/s.1-8.png",
         "grade": "uncommon",
@@ -221,6 +230,15 @@
         "image": "assets/runes/sub-runes/uncommon/s.1-26.png",
         "grade": "uncommon",
         "effect": "장착한 매콤 동료 하나 당 매콤 타입 스킬의 피해량이 20% 증가합니다.",
+        "holdEffect": "공격력 증폭 +10%"
+    },
+    {
+        "id": "uncommon_s-rune",
+        "type": "sub-rune",
+        "name": "식물 강화",
+        "image": "assets/runes/sub-runes/uncommon/s.1-27.png",
+        "grade": "uncommon",
+        "effect": "장착한 식물 동료 하나 당 식물 타입 스킬의 피해량이 20% 증가합니다.",
         "holdEffect": "공격력 증폭 +10%"
     },
     {
@@ -1018,6 +1036,15 @@
     {
         "id": "legendary_s-rune",
         "type": "sub-rune",
+        "name": "매콤 마력 개선",
+        "image": "assets/runes/sub-runes/legendary/s.4-26.png",
+        "grade": "legendary",
+        "effect": "전설 등급 매콤 필요 마력 2 감소",
+        "holdEffect": "공격력 증폭 +100%"
+    },
+    {
+        "id": "legendary_s-rune",
+        "type": "sub-rune",
         "name": "중형 강화",
         "image": "assets/runes/sub-runes/legendary/s.4-27.png",
         "grade": "legendary",
@@ -1180,11 +1207,11 @@
     {
         "id": "legendary_s-rune",
         "type": "sub-rune",
-        "name": "매콤 마력 개선",
+        "name": "해적 치명타 강화",
         "image": "assets/runes/sub-runes/legendary/s.4-45.png",
-        "grade": "Legendary",
-        "effect": "",
-        "holdEffect": ""
+        "grade": "mythic",
+        "effect": "장착한 해적 동료 하나 당 치명타로 입히는 피해가 150% 증가합니다.",
+        "holdEffect": "공격력 증폭 +100%"
     },
     {
         "id": "legendary_s-rune",
@@ -1238,6 +1265,24 @@
         "image": "assets/runes/sub-runes/legendary/s.4-51.png",
         "grade": "legendary",
         "effect": "장착한 해적 동료 하나 당 치명타 피해 증폭이 150% 증가합니다.",
+        "holdEffect": "공격력 증폭 +100%"
+    },
+    {
+        "id": "legendary_s-rune",
+        "type": "sub-rune",
+        "name": "상어 마력 개선",
+        "image": "assets/runes/sub-runes/legendary/s.4-52.png",
+        "grade": "legendary",
+        "effect": "전설 등급 상어 필요 마력 2 감소",
+        "holdEffect": "공격력 증폭 +100%"
+    },
+    {
+        "id": "legendary_s-rune",
+        "type": "sub-rune",
+        "name": "늑대 마력 개선",
+        "image": "assets/runes/sub-runes/legendary/s.4-53.png",
+        "grade": "legendary",
+        "effect": "전설 등급 늑대 필요 마력 2 감소",
         "holdEffect": "공격력 증폭 +100%"
     },
     {

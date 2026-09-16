@@ -111,52 +111,74 @@ function renderSoulstone() {
     if (globalProbLabel) globalProbLabel.textContent = `세공 확률 ${(globalProb * 100).toFixed(0)}%`;
 
     box.innerHTML = SOULSTONE_ROW_DEFS.map((def) => {
-                const row = soulstoneRows[def.id];
-                const successes = row.results.filter(Boolean).length;
-                const isDone = row.results.length >= soulstoneSlotCount;
-                const level = soulstoneCurrentLevel(row);
+        const row = soulstoneRows[def.id];
+        const successes = row.results.filter(Boolean).length;
+        const isDone = row.results.length >= soulstoneSlotCount;
+        const level = soulstoneCurrentLevel(row);
+        const levelText = level > 0 ? `Lv.${level}` : "미달성";
 
-                const pipsHtml = Array.from({ length: soulstoneSlotCount }).map((_, i) => {
-                    if (i < row.results.length) {
-                        const success = row.results[i];
-                        return `<span class="soulstone-pip ${def.tone} ${success ? "success" : "fail"}"></span>`;
-                    }
-                    return `<span class="soulstone-pip ${def.tone} pending"></span>`;
-                }).join("");
+        const markerByIndex = {};
+        // SOULSTONE_LEVEL_THRESHOLDS.forEach((t) => { markerByIndex[t.need - 1] = `Lv.${t.level}`; });
 
-                const markerByIndex = {};
-                // SOULSTONE_LEVEL_THRESHOLDS.forEach((t) => { markerByIndex[t.need - 1] = `Lv.${t.level}`; });
-                const markersHtml = Array.from({ length: soulstoneSlotCount }).map((_, i) => {
-                    const label = markerByIndex[i];
-                    return `<span class="soulstone-marker-cell ${label ? "has-mark" : ""}">${label || ""}</span>`;
-                }).join("");
+        // ---- 데스크톱용 핀(clip-path 다이아몬드 - 회전 겹침 문제 없음, 모바일과 동일 기법) ----
+        const desktopPipsHtml = Array.from({ length: soulstoneSlotCount }).map((_, i) => {
+            const label = markerByIndex[i];
+            const state = i < row.results.length ? (row.results[i] ? "success" : "fail") : "pending";
+            return `
+                <div class="ss-d-pip-cell">
+                    <span class="ss-d-pip ${def.tone} ${state}"></span>
+                    <span class="ss-d-pip-mark ${label ? "has-mark" : ""}">${label || ""}</span>
+                </div>
+            `;
+        }).join("");
 
-                return `
-            <div class="soulstone-row">
-                <div class="soulstone-row-main">
-                    <div class="soulstone-row-label-cell">
-                        <span class="soulstone-row-label">${def.label}</span>
-                        <span class="soulstone-row-substatus">
-                            <span class="soulstone-row-level ${level > 0 ? "on" : ""}">${level > 0 ? `Lv.${level}` : "미달성"}</span>
-                            <span class="soulstone-row-count">${successes}/${soulstoneSlotCount}</span>
-                        </span>
+        // ---- 모바일용 핀(clip-path 다이아몬드, 5x2 그리드) ----
+        const mobilePipsHtml = Array.from({ length: soulstoneSlotCount }).map((_, i) => {
+            const label = markerByIndex[i];
+            const state = i < row.results.length ? (row.results[i] ? "success" : "fail") : "pending";
+            return `
+                <div class="ss-m-pip-cell">
+                    <span class="ss-m-pip ${def.tone} ${state}"></span>
+                    <span class="ss-m-pip-mark ${label ? "has-mark" : ""}">${label || ""}</span>
+                </div>
+            `;
+        }).join("");
+
+        const actionButtonsHtml = (btnClass) => `
+            <button type="button" class="${btnClass}" ${isDone ? "disabled" : ""} onclick="recordSoulstoneAttempt('${def.id}', true)">성공</button>
+            <button type="button" class="${btnClass}" ${isDone ? "disabled" : ""} onclick="recordSoulstoneAttempt('${def.id}', false)">실패</button>
+        `;
+
+        return `
+            <!-- 데스크톱/태블릿용 카드 -->
+            <div class="soulstone-row soulstone-row-desktop">
+                <div class="ss-d-header">
+                    <span class="ss-d-label">${def.label}</span>
+                    <span class="ss-d-level ${level > 0 ? "on" : ""}">${levelText}</span>
+                    <span class="ss-d-count">${successes} / ${soulstoneSlotCount}</span>
+                </div>
+                <div class="ss-d-body">
+                    <div class="ss-d-pip-row">${desktopPipsHtml}</div>
+                    <div class="ss-d-actions">
+                        ${actionButtonsHtml("ss-d-btn")}
                     </div>
+                </div>
+            </div>
 
-                    <div class="soulstone-row-pips-actions">
-                        <div class="soulstone-pip-track">
-                            <div class="soulstone-pip-row">${pipsHtml}</div>
-                            <div class="soulstone-pip-markers">${markersHtml}</div>
-                        </div>
+            <!-- 모바일 전용 카드 (별도 레이아웃) -->
+            <div class="soulstone-row soulstone-row-mobile">
+                <div class="ss-m-head">
+                    <span class="ss-m-label">${def.label}</span>
+                    <span class="ss-m-badges">
+                        <span class="ss-m-level ${level > 0 ? "on" : ""}">${levelText}</span>
+                        <span class="ss-m-count">${successes}/${soulstoneSlotCount}</span>
+                    </span>
+                </div>
 
-                        <div class="soulstone-row-actions">
-                            <button type="button" class="soulstone-small-btn" ${isDone ? "disabled" : ""} onclick="recordSoulstoneAttempt('${def.id}', true)">
-                                성공
-                            </button>
-                            <button type="button" class="soulstone-small-btn" ${isDone ? "disabled" : ""} onclick="recordSoulstoneAttempt('${def.id}', false)">
-                                실패
-                            </button>
-                        </div>
-                    </div>
+                <div class="ss-m-pip-grid">${mobilePipsHtml}</div>
+
+                <div class="ss-m-actions">
+                    ${actionButtonsHtml("ss-m-btn")}
                 </div>
             </div>
         `;
