@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동료 데이터 입력기 - CatHero LAB</title>
+    <style>
+         :root {
+            --bg: #0f1420;
+            --panel: #161d2e;
+            --panel2: #1c2438;
+            --border: #2a3350;
+            --text: #e7ebf5;
+            --sub: #8a93ab;
+            --accent: #f5a524;
+            --accent2: #3ba1ff;
+            --ok: #33c37a;
+            --warn: #ef4444;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: ui-sans-serif, system-ui, "Malgun Gothic", sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .app {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            height: 100vh;
+        }
+        /* ---------- Topbar ---------- */
+        
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            z-index: 10;
+        }
+        
+        .topbar .title {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 15px;
+            white-space: nowrap;
+        }
+        
+        .topbar .spacer {
+            flex: 1;
+        }
+        
+        .file-btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .file-btn input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .btn {
+            background: var(--panel2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn.primary {
+            background: var(--accent);
+            color: #1a1300;
+            border-color: var(--accent);
+        }
+        
+        .btn.primary:hover {
+            filter: brightness(1.08);
+            color: #1a1300;
+        }
+        
+        .btn.ghost {
+            background: transparent;
+        }
+        
+        .progress-pill {
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--panel2);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 12px;
+            color: var(--sub);
+        }
+        
+        .progress-pill b {
+            color: var(--ok);
+        }
+        /* ---------- Layout ---------- */
+        
+        .app {
+            padding-top: 56px;
+        }
+        
+        .sidebar {
+            border-right: 1px solid var(--border);
+            background: var(--panel);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 56px);
+        }
+        
+        .sidebar-controls {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .search-input {
+            width: 100%;
+            background: var(--panel2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 13px;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: var(--accent2);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .chip {
+            background: var(--panel2);
+            border: 1px solid var(--border);
+            color: var(--sub);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .chip.active {
+            background: var(--accent2);
+            color: #001a33;
+            border-color: var(--accent2);
+        }
+        
+        .chip.status.active {
+            background: var(--ok);
+            color: #00220f;
+            border-color: var(--ok);
+        }
+        
+        .rune-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px;
+        }
+        
+        .rune-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        
+        .rune-row:hover {
+            background: var(--panel2);
+        }
+        
+        .rune-row.active {
+            background: #2a2210;
+            border-color: var(--accent);
+        }
+        
+        .rune-row img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            flex-shrink: 0;
+            background: #0c1120;
+            border-radius: 6px;
+        }
+        
+        .rune-row .meta {
+            min-width: 0;
+            flex: 1;
+        }
+        
+        .rune-row .name {
+            font-size: 12.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .rune-row .sub {
+            font-size: 10.5px;
+            color: var(--sub);
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        
+        .status-dot.done {
+            background: var(--ok);
+        }
+        
+        .status-dot.pending {
+            background: #3a4155;
+        }
+        /* ---------- Main panel ---------- */
+        
+        .main {
+            padding: 24px 32px;
+            overflow-y: auto;
+            height: calc(100vh - 56px);
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--sub);
+            gap: 8px;
+            text-align: center;
+        }
+        
+        .empty-state .big {
+            font-size: 40px;
+        }
+        
+        .editor {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        
+        .editor-head {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .editor-head img {
+            width: 88px;
+            height: 88px;
+            object-fit: contain;
+            background: var(--panel2);
+            border-radius: 16px;
+            padding: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .editor-head .info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .editor-head .name {
+            font-size: 22px;
+            font-weight: 900;
+        }
+        
+        .badge-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 999px;
+            color: #fff;
+            background: #3a4155;
+        }
+        
+        .badge.unique {
+            background: linear-gradient(135deg, #f5a524, #ef4444);
+        }
+        
+        .path {
+            font-size: 11px;
+            color: var(--sub);
+            font-family: ui-monospace, monospace;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+        
+        .nav-arrows {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .nav-arrows .btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .field {
+            margin-bottom: 22px;
+        }
+        
+        .field label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--sub);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+        
+        .field .hint {
+            font-weight: 500;
+            text-transform: none;
+            color: #565f78;
+            font-size: 11.5px;
+            margin-left: 6px;
+        }
+        
+        textarea,
+        .field input[type=text] {
+            width: 100%;
+            background: var(--panel2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            outline: none;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        textarea:focus,
+        .field input[type=text]:focus {
+            border-color: var(--accent2);
+        }
+        
+        textarea {
+            min-height: 80px;
+        }
+        /* 크기 / 동료타입 다중 선택 칩 */
+        
+        .tag-toggle-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag-toggle {
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--panel2);
+            color: var(--sub);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .12s ease;
+        }
+        
+        .tag-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .tag-toggle.on {
+            border-color: var(--accent);
+            color: #1a1300;
+            background: var(--accent);
+        }
+        
+        .tag-toggle.unique-tag.on {
+            background: linear-gradient(135deg, #f5a524, #ef4444);
+            border-color: #ef4444;
+        }
+        
+        .tag-toggle.unique-tag {
+            border-style: dashed;
+        }
+        /* 등급 (단일 선택) */
+        
+        .grade-toggle.on {
+            background: linear-gradient(135deg, #f5a524, #ef4444);
+            border-color: #ef4444;
+            color: #1a1300;
+        }
+        /* 특수효과 슬롯 카드 */
+        
+        .special-slot-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .special-slot-card {
+            border: 1px solid var(--border);
+            background: var(--panel2);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        
+        .special-slot-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .special-slot-head input[type=text].slot-icon-label {
+            flex: 1;
+        }
+        
+        .slot-level-frozen-badge {
+            flex-shrink: 0;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--accent);
+            background: #2a2210;
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            padding: 3px 9px;
+            white-space: nowrap;
+        }
+        
+        .special-slot-head .slot-remove {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--panel2);
+            color: var(--warn);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .special-slot-head .slot-remove:hover {
+            border-color: var(--warn);
+        }
+        
+        textarea.slot-effect-text {
+            width: 100%;
+            min-height: 64px;
+            margin-top: 2px;
+        }
+        
+        .slot-unlock-input {
+            margin-top: 4px;
+        }
+        
+        .slot-add-btn {
+            border: 1px dashed var(--border);
+            background: transparent;
+            color: var(--sub);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            padding: 10px;
+        }
+        
+        .slot-add-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        /* 각성 효과 */
+        
+        .awaken-box {
+            border: 1px solid #7a4a1a;
+            background: linear-gradient(135deg, #241a0c, #1c2438);
+            border-radius: 12px;
+            padding: 14px;
+        }
+        
+        .awaken-box .field label {
+            color: #f5a524;
+        }
+        
+        .save-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .save-status {
+            font-size: 12px;
+            color: var(--ok);
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity .2s;
+        }
+        
+        .save-status.show {
+            opacity: 1;
+        }
+        
+        .bottom-nav {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .bottom-nav .btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: #2a3350;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="title">🐾 동료 데이터 입력기</div>
+        <button class="btn file-btn">📂 동료 데이터(json) 불러오기
+    <input type="file" id="load-companion" accept=".json">
+  </button>
+        <div class="spacer"></div>
+        <div class="progress-pill" id="progress-pill">0 / 0 완료</div>
+        <button class="btn ghost" id="clear-storage-btn" title="이 브라우저에 저장된 입력 데이터를 모두 지웁니다">🗑 임시저장 초기화</button>
+        <button class="btn primary" id="export-btn">⬇ 완성본 내보내기 (JSON)</button>
+    </div>
+
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-controls">
+                <input type="text" class="search-input" id="search-input" placeholder="이름으로 검색...">
+                <div class="filter-row" id="status-filter">
+                    <span class="chip status active" data-status="all">전체</span>
+                    <span class="chip status" data-status="pending">미완료만</span>
+                    <span class="chip status" data-status="done">완료만</span>
+                </div>
+            </div>
+            <div class="rune-list" id="rune-list"></div>
+        </aside>
+
+        <main class="main" id="main-panel">
+            <div class="empty-state">
+                <div class="big">📂</div>
+                <div>왼쪽 상단에서 동료 데이터 json 파일을 불러와주세요.<br>불러오면 여기서 동료를 하나씩 선택해서 정보를 입력할 수 있어요.</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           설정값
+           ========================================================================== */
+        const SIZE_OPTIONS = ["소형", "중형", "대형"];
+        const TYPE_OPTIONS = [
+            "음식", "식물", "동물", "디저트", "햄버거", "용", "닭", "고양이", "기계",
+            "해적", "늑대", "마법", "상어", "구름", "매콤", "고래", "그림자", "버프", "고유"
+        ];
+        const GRADE_OPTIONS = ["일반", "레어", "에픽", "전설", "신화"];
+        // 전설 이상 등급은 각성 효과가 존재함
+        const AWAKEN_ELIGIBLE_GRADES = ["전설", "신화"];
+        const STORAGE_KEY = "cathero_companion_detail_v2";
+
+        /* ==========================================================================
+           상태
+           ========================================================================== */
+        let allCompanions = []; // {key, name, image, ...original}
+        let filtered = [];
+        let selectedKey = null;
+        // draft[key] = {
+        //   grade: "",                 // 등급 (단일 선택)
+        //   sizes: [], types: [],
+        //   holdEffect12: "",           // 보유 효과 (12성 기준)
+        //   holdEffect25: "",           // 보유 효과 (25성 기준, 25성 10각과 동일)
+        //   specialSlots: [            // 특수효과 아이콘 슬롯들 (동료마다 여러 개 가능)
+        //     { iconLabel: "", unlockCondition: "", effect: "" }
+        //   ],                          // ※ 특수효과는 12성 기준이든 25성 기준이든 항상 Lv.3(만렙)로
+        //                                //   동결된 상태라 슬롯당 효과 텍스트 1개만 기록합니다.
+        //   awaken: { effect: "" }  // 전설+ 등급의 각성 효과 (25성 기준 최대치 1개만 기록)
+        // }
+        let draft = loadDraft();
+        let saveTimer = null;
+
+        let currentFilter = {
+            status: "all",
+            q: ""
+        };
+
+        function loadDraft() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function persistDraft() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+        }
+
+        function getDraft(key) {
+            const d = draft[key] || {};
+            return {
+                grade: d.grade || "",
+                sizes: Array.isArray(d.sizes) ? d.sizes : [],
+                types: Array.isArray(d.types) ? d.types : [],
+                holdEffect12: d.holdEffect12 || "",
+                holdEffect25: d.holdEffect25 || "",
+                specialSlots: Array.isArray(d.specialSlots) ? d.specialSlots : [],
+                awaken: d.awaken && typeof d.awaken === "object" ? {
+                    effect: d.awaken.effect || ""
+                } : {
+                    effect: ""
+                },
+            };
+        }
+
+        /* ==========================================================================
+           파일 로드
+           ========================================================================== */
+        function keyFor(item) {
+            // image 경로를 고유 식별자로 사용 (없으면 name으로 대체)
+            return item.image || item.name;
+        }
+
+        function ingest(list) {
+            list.forEach(item => {
+                if (!item || (!item.image && !item.name)) return; // 손상된 항목은 건너뜀
+                const key = keyFor(item);
+                const existingIdx = allCompanions.findIndex(x => x.key === key);
+                const entry = {
+                    key,
+                    ...item
+                };
+                if (existingIdx >= 0) allCompanions[existingIdx] = entry;
+                else allCompanions.push(entry);
+            });
+        }
+
+        document.getElementById("load-companion").addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const data = JSON.parse(reader.result);
+                    ingest(Array.isArray(data) ? data : [data]);
+                    afterLoad();
+                } catch (err) {
+                    alert("동료 데이터 파싱 실패: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function afterLoad() {
+            document.getElementById("main-panel").innerHTML = "";
+            applyFilter();
+            if (!selectedKey && filtered.length) selectCompanion(filtered[0].key);
+            updateProgressPill();
+        }
+
+        /* ==========================================================================
+           필터 / 검색 / 리스트 렌더
+           ========================================================================== */
+        function isDone(key) {
+            const d = getDraft(key);
+            return d.specialSlots.some(slot => slot.effect && slot.effect.trim());
+        }
+
+        function applyFilter() {
+            filtered = allCompanions.filter(c => {
+                if (currentFilter.status === "done" && !isDone(c.key)) return false;
+                if (currentFilter.status === "pending" && isDone(c.key)) return false;
+                if (currentFilter.q && !(c.name || "").toLowerCase().includes(currentFilter.q.toLowerCase())) return false;
+                return true;
+            });
+            filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            renderList();
+        }
+
+        function renderList() {
+            const box = document.getElementById("rune-list");
+            if (!filtered.length) {
+                box.innerHTML = `<div style="padding:20px;color:var(--sub);font-size:12.5px;text-align:center;">조건에 맞는 동료가 없습니다.</div>`;
+                return;
+            }
+            box.innerHTML = filtered.map(c => {
+                const d = getDraft(c.key);
+                const subLabel = [d.grade, ...d.sizes, ...d.types].filter(Boolean).slice(0, 3).join(" · ") || "미분류";
+                return `
+    <div class="rune-row ${c.key === selectedKey ? 'active' : ''}" data-key="${encodeURIComponent(c.key)}">
+      <img src="${c.image || ''}" loading="lazy" onerror="this.style.opacity=0.15">
+      <div class="meta">
+        <div class="name">${c.name || '(이름 없음)'}</div>
+        <div class="sub">${subLabel}</div>
+      </div>
+      <span class="status-dot ${isDone(c.key) ? 'done' : 'pending'}"></span>
+    </div>
+  `;
+            }).join("");
+
+            box.querySelectorAll(".rune-row").forEach(row => {
+                row.addEventListener("click", () => selectCompanion(decodeURIComponent(row.dataset.key)));
+            });
+        }
+
+        document.getElementById("search-input").addEventListener("input", e => {
+            currentFilter.q = e.target.value;
+            applyFilter();
+        });
+        document.getElementById("status-filter").addEventListener("click", e => {
+            const chip = e.target.closest(".chip");
+            if (!chip) return;
+            document.querySelectorAll("#status-filter .chip").forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+            currentFilter.status = chip.dataset.status;
+            applyFilter();
+        });
+
+        /* ==========================================================================
+           에디터 (선택된 동료 상세 입력폼)
+           ========================================================================== */
+        function selectCompanion(key) {
+            selectedKey = key;
+            const item = allCompanions.find(c => c.key === key);
+            if (!item) return;
+
+            document.querySelectorAll(".rune-row").forEach(row => {
+                row.classList.toggle("active", decodeURIComponent(row.dataset.key) === key);
+            });
+            const activeRow = document.querySelector(".rune-row.active");
+            if (activeRow) activeRow.scrollIntoView({
+                block: "nearest"
+            });
+
+            const d = getDraft(key);
+            const idxInFiltered = filtered.findIndex(c => c.key === key);
+
+            const badgeHtml = [d.grade, ...d.sizes, ...d.types].filter(Boolean)
+                .map(t => `<span class="badge ${t === '고유' ? 'unique' : ''}">${t}</span>`)
+                .join("") || `<span class="badge" style="background:#2a3350;">미분류</span>`;
+
+            const canAwaken = AWAKEN_ELIGIBLE_GRADES.includes(d.grade);
+
+            document.getElementById("main-panel").innerHTML = `
+    <div class="editor">
+      <div class="editor-head">
+        <img src="${item.image || ''}" onerror="this.style.opacity=0.15">
+        <div class="info">
+          <div class="name">${item.name || '(이름 없음)'}</div>
+          <div class="badge-row" id="head-badge-row">${badgeHtml}</div>
+          <div class="path">${item.image || ''}</div>
+        </div>
+        <div class="nav-arrows">
+          <button class="btn" id="prev-btn" ${idxInFiltered <= 0 ? 'disabled' : ''}>◀</button>
+          <button class="btn" id="next-btn" ${idxInFiltered >= filtered.length - 1 ? 'disabled' : ''}>▶</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>등급 <span class="hint">단일 선택 · 전설/신화 등급은 아래 각성 효과 입력 가능</span></label>
+        <div class="tag-toggle-grid" id="grade-toggle-grid">
+          ${GRADE_OPTIONS.map(g => `<button type="button" class="tag-toggle grade-toggle ${d.grade === g ? 'on' : ''}" data-grade="${g}">${g}</button>`).join("")}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>크기 <span class="hint">중복 선택 가능</span></label>
+        <div class="tag-toggle-grid" id="size-toggle-grid">
+          ${SIZE_OPTIONS.map(s => `<button type="button" class="tag-toggle ${d.sizes.includes(s) ? 'on' : ''}" data-size="${s}">${s}</button>`).join("")}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>동료 타입 <span class="hint">중복 선택 가능 · "고유"는 덱당 1마리만 착용 가능한 동료</span></label>
+        <div class="tag-toggle-grid" id="type-toggle-grid">
+          ${TYPE_OPTIONS.map(t => `<button type="button" class="tag-toggle ${t === '고유' ? 'unique-tag' : ''} ${d.types.includes(t) ? 'on' : ''}" data-type="${t}">${t}</button>`).join("")}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>보유 효과 (12성 기준) <span class="hint">덱에 편성만 해도 적용되는 효과 (게임 팝업 문구 그대로)</span></label>
+        <textarea id="hold-input-12" placeholder="예: 모든 동료의 공격력 +15%">${d.holdEffect12 || ""}</textarea>
+      </div>
+
+      <div class="field">
+        <label>보유 효과 (25성 기준) <span class="hint">25성 10각과 동일 · 게임 팝업 문구 그대로</span></label>
+        <textarea id="hold-input-25" placeholder="예: 모든 동료의 공격력 +30%">${d.holdEffect25 || ""}</textarea>
+      </div>
+
+      <div class="field">
+        <label>특수 효과 <span class="hint">아이콘 슬롯별로 따로 존재 · Lv.3(만렙) 기준 1개 + 해금 조건</span></label>
+        <div class="special-slot-list" id="special-slot-list"></div>
+        <button type="button" class="slot-add-btn" id="slot-add-btn">＋ 특수효과 슬롯 추가</button>
+      </div>
+
+      <div class="field">
+        <label>각성 효과 <span class="hint">전설 이상 등급부터 존재 · 25성 기준(최대치) 1개만 기록${canAwaken ? '' : ' (현재 등급에서는 비활성)'}</span></label>
+        <div class="awaken-box">
+          <div class="field" style="margin-bottom:0;">
+            <textarea id="awaken-effect-input" placeholder="예: 침식 효과의 대상에게 입히는 피해가 1200% 증가한다." ${canAwaken ? '' : 'disabled'}>${d.awaken.effect || ""}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-row">
+        <span class="save-status" id="save-status">✓ 자동 저장됨</span>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn" id="prev-btn-2" ${idxInFiltered <= 0 ? 'disabled' : ''}>◀ 이전 동료</button>
+        <button class="btn primary" id="next-btn-2" ${idxInFiltered >= filtered.length - 1 ? 'disabled' : ''}>다음 동료 ▶</button>
+      </div>
+    </div>
+  `;
+
+  renderSpecialSlots(key, d.specialSlots);
+
+  // 등급 단일 토글
+  document.querySelectorAll("#grade-toggle-grid .tag-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const wasOn = btn.classList.contains("on");
+      document.querySelectorAll("#grade-toggle-grid .tag-toggle").forEach(b => b.classList.remove("on"));
+      const newGrade = wasOn ? "" : btn.dataset.grade;
+      if (!wasOn) btn.classList.add("on");
+      updateDraft(key, { grade: newGrade });
+      refreshHeadBadges(key);
+      // 등급이 바뀌면 각성 섹션 활성/비활성도 갱신되도록 폼을 다시 그림
+      selectCompanion(key);
+    });
+  });
+
+  // 크기 다중 토글
+  document.querySelectorAll("#size-toggle-grid .tag-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("on");
+      const sizes = [...document.querySelectorAll("#size-toggle-grid .tag-toggle.on")].map(b => b.dataset.size);
+      updateDraft(key, { sizes });
+      refreshHeadBadges(key);
+    });
+  });
+
+  // 동료 타입 다중 토글
+  document.querySelectorAll("#type-toggle-grid .tag-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("on");
+      const types = [...document.querySelectorAll("#type-toggle-grid .tag-toggle.on")].map(b => b.dataset.type);
+      updateDraft(key, { types });
+      refreshHeadBadges(key);
+    });
+  });
+
+  // 텍스트 입력 (디바운스 자동저장)
+  const holdEl12 = document.getElementById("hold-input-12");
+  const holdEl25 = document.getElementById("hold-input-25");
+  holdEl12.addEventListener("input", () => scheduleSave(key, { holdEffect12: holdEl12.value }));
+  holdEl25.addEventListener("input", () => scheduleSave(key, { holdEffect25: holdEl25.value }));
+
+  // 각성 효과 입력
+  const awakenEffectEl = document.getElementById("awaken-effect-input");
+  const commitAwaken = () => scheduleSave(key, { awaken: { effect: awakenEffectEl.value } });
+  awakenEffectEl?.addEventListener("input", commitAwaken);
+
+  // 능력치 추가
+  // 특수효과 슬롯 추가
+  document.getElementById("slot-add-btn").addEventListener("click", () => {
+    const current = getDraft(key).specialSlots;
+    const next = [...current, { iconLabel: "", unlockCondition: "", effect: "" }];
+    updateDraft(key, { specialSlots: next });
+    renderSpecialSlots(key, next);
+  });
+
+  // 이전/다음
+  const goPrev = () => { if (idxInFiltered > 0) selectCompanion(filtered[idxInFiltered - 1].key); };
+  const goNext = () => { if (idxInFiltered < filtered.length - 1) selectCompanion(filtered[idxInFiltered + 1].key); };
+  ["prev-btn", "prev-btn-2"].forEach(id => document.getElementById(id)?.addEventListener("click", goPrev));
+  ["next-btn", "next-btn-2"].forEach(id => document.getElementById(id)?.addEventListener("click", goNext));
+}
+
+function refreshHeadBadges(key) {
+  const d = getDraft(key);
+  const row = document.getElementById("head-badge-row");
+  if (!row) return;
+  row.innerHTML = [d.grade, ...d.sizes, ...d.types].filter(Boolean)
+    .map(t => `<span class="badge ${t === '고유' ? 'unique' : ''}">${t}</span>`)
+    .join("") || `<span class="badge" style="background:#2a3350;">미분류</span>`;
+  renderList(); // 사이드바 요약 라벨도 갱신
+}
+
+/* ---- 특수효과 슬롯 (아이콘별로 여러 개) ----
+   12성/25성/25성 10각 어느 기준으로 봐도 특수효과는 이미 Lv.3(만렙)이라
+   체크포인트별로 나눠 적을 필요가 없어서, 슬롯 하나당 효과 텍스트 1개만 받습니다. */
+function renderSpecialSlots(key, slots) {
+  const box = document.getElementById("special-slot-list");
+  if (!box) return;
+
+  if (!slots.length) {
+    box.innerHTML = `<div style="color:#565f78;font-size:12px;padding:4px 2px;">아직 추가된 특수효과 슬롯이 없습니다. 아래 버튼으로 아이콘 슬롯을 추가하세요.</div>`;
+  } else {
+    box.innerHTML = slots.map((slot, si) => `
+      <div class="special-slot-card" data-sidx="${si}">
+        <div class="special-slot-head">
+          <input type="text" class="slot-icon-label" placeholder="아이콘/스킬명 (예: 다이나잇 스킬)" value="${(slot.iconLabel || "").replace(/"/g, '&quot;')}">
+          <span class="slot-level-frozen-badge">Lv.3 만렙 고정</span>
+          <button type="button" class="slot-remove" title="이 특수효과 슬롯 삭제">✕</button>
+        </div>
+        <textarea class="slot-effect-text" placeholder="효과 설명 (Lv.3 만렙 기준, 게임 팝업 문구 그대로)">${slot.effect || ""}</textarea>
+        <div class="field slot-unlock-input" style="margin-bottom:0;margin-top:10px;">
+          <label style="font-size:11px;">해금 조건 <span class="hint">있는 경우만 입력 (예: 151레벨 달성 시 잠금해제)</span></label>
+          <input type="text" class="slot-unlock" placeholder="예: 151레벨 달성 시 잠금해제" value="${(slot.unlockCondition || "").replace(/"/g, '&quot;')}">
+        </div>
+      </div>
+    `).join("");
+  }
+
+  box.querySelectorAll(".special-slot-card").forEach(card => {
+    const si = Number(card.dataset.sidx);
+    const iconEl = card.querySelector(".slot-icon-label");
+    const effectEl = card.querySelector(".slot-effect-text");
+    const unlockEl = card.querySelector(".slot-unlock");
+    const removeBtn = card.querySelector(".slot-remove");
+
+    const commitSlot = () => {
+      const currentSlots = getDraft(key).specialSlots;
+      currentSlots[si].iconLabel = iconEl.value;
+      currentSlots[si].effect = effectEl.value;
+      currentSlots[si].unlockCondition = unlockEl.value;
+      scheduleSave(key, { specialSlots: currentSlots });
+    };
+    iconEl?.addEventListener("input", commitSlot);
+    effectEl?.addEventListener("input", commitSlot);
+    unlockEl?.addEventListener("input", commitSlot);
+
+    removeBtn?.addEventListener("click", () => {
+      const currentSlots = getDraft(key).specialSlots.filter((_, i) => i !== si);
+      updateDraft(key, { specialSlots: currentSlots });
+      renderSpecialSlots(key, currentSlots);
+    });
+  });
+}
+
+function updateDraft(key, patch) {
+  draft[key] = { ...getDraft(key), ...patch };
+  persistDraft();
+  flashSaved();
+  renderList();
+  updateProgressPill();
+}
+
+function scheduleSave(key, patch) {
+  draft[key] = { ...getDraft(key), ...patch };
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    persistDraft();
+    flashSaved();
+    renderList();
+    updateProgressPill();
+  }, 400);
+}
+
+function flashSaved() {
+  const el = document.getElementById("save-status");
+  if (!el) return;
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove("show"), 1200);
+}
+
+function updateProgressPill() {
+  const pill = document.getElementById("progress-pill");
+  if (!allCompanions.length) { pill.innerHTML = "0 / 0 완료"; return; }
+  const done = allCompanions.filter(c => isDone(c.key)).length;
+  pill.innerHTML = `<b>${done}</b> / ${allCompanions.length} 완료`;
+}
+
+/* ==========================================================================
+   내보내기 / 초기화
+   ========================================================================== */
+document.getElementById("export-btn").addEventListener("click", () => {
+  if (!allCompanions.length) { alert("먼저 동료 데이터 json을 불러와주세요."); return; }
+  const out = allCompanions.map(cleanForExport);
+  downloadJSON(out, "companion.json");
+});
+
+function cleanForExport(c) {
+  const d = getDraft(c.key);
+  const out = { ...c };
+  delete out.key;
+  out.grade = d.grade;
+  out.sizes = d.sizes;
+  out.types = d.types;
+  out.holdEffect12 = d.holdEffect12;
+  out.holdEffect25 = d.holdEffect25;
+  out.specialSlots = d.specialSlots
+    .map(slot => ({
+      iconLabel: slot.iconLabel || "",
+      unlockCondition: slot.unlockCondition || "",
+      effect: slot.effect || "",
+    }))
+    .filter(slot => slot.iconLabel.trim() || slot.effect.trim());
+  if (AWAKEN_ELIGIBLE_GRADES.includes(d.grade) && d.awaken.effect.trim()) {
+    out.awaken = { effect: d.awaken.effect };
+  } else {
+    out.awaken = null;
+  }
+  return out;
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 4)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("clear-storage-btn").addEventListener("click", () => {
+  if (!confirm("이 브라우저에 임시 저장된 모든 입력 데이터를 삭제할까요? (내보내기 하지 않은 데이터는 복구할 수 없습니다)")) return;
+  draft = {};
+  persistDraft();
+  applyFilter();
+  updateProgressPill();
+  if (selectedKey) selectCompanion(selectedKey);
+});
+
+/* ==========================================================================
+   초기화: 브라우저를 새로고침해도 draft는 localStorage에서 자동 복원됨
+   (원본 json 파일 자체는 매번 다시 불러와야 함 - 브라우저 보안 제약)
+   ========================================================================== */
+window.addEventListener("beforeunload", persistDraft);
+    </script>
+</body>
+
+</html>
