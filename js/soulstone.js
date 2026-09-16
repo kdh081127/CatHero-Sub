@@ -23,8 +23,8 @@ const SOULSTONE_STEP = 0.10;
 const SOULSTONE_MIN_PROB = 0.25;
 const SOULSTONE_MAX_PROB = 0.75;
 const SOULSTONE_LEVEL_THRESHOLDS = [
-    { level: 1, need: 3 },
-    { level: 2, need: 6 },
+    { level: 1, need: 4 },
+    { level: 2, need: 7 },
     { level: 3, need: 9 },
 ];
 
