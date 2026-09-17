@@ -11,6 +11,7 @@ const userState = {
     equippedMainRunes: [null, null, null, null], // 메인 특수 룬 - 최대 4슬롯 (값: rune.image 문자열 또는 null)
     equippedSubRunes: [null, null, null, null, null, null], // 서브 룬 - 최대 6슬롯
     equippedCompanions: [null, null, null, null, null, null], // 동료 - 최대 6슬롯 (값: companion.image 문자열 또는 null) [슬롯 수는 임시값, 알려주시면 바로 수정 가능]
+    equippedSkills: [null, null, null, null, null, null], // 스킬 - 최대 6슬롯 (값: skill.image 문자열 또는 null)
 };
 
 function saveUserState() {
@@ -26,6 +27,7 @@ function loadUserState() {
             if (Array.isArray(saved.equippedMainRunes)) userState.equippedMainRunes = normalizeSlots(saved.equippedMainRunes, 4);
             if (Array.isArray(saved.equippedSubRunes)) userState.equippedSubRunes = normalizeSlots(saved.equippedSubRunes, 6);
             if (Array.isArray(saved.equippedCompanions)) userState.equippedCompanions = normalizeSlots(saved.equippedCompanions, 6);
+            if (Array.isArray(saved.equippedSkills)) userState.equippedSkills = normalizeSlots(saved.equippedSkills, 6);
         }
     } catch (e) { /* 무시 */ }
 }

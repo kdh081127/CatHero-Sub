@@ -27,21 +27,7 @@
             <button type="button" id="gnb-soulstone" class="info-nav-btn" onclick="switchMainView('soulstone')">냥혼석 세공</button>
         </nav>
 
-        <!-- 헤더 우측 메뉴 (프리셋 퀵 컨트롤러) -->
         <div class="header-user-menu">
-            <div class="preset-controller">
-                <span class="preset-icon">📁</span>
-                <select id="preset-quick-select" class="preset-select" onchange="applyPreset(this.value)">
-                    <!-- js/preset.js에 의해 동적으로 채워집니다 -->
-                </select>
-
-                <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentPreset()" title="현재 세팅을 선택된 슬롯에 덮어쓰기">
-                    저장
-                </button>
-                <button type="button" class="btn-preset-action btn-preset-manage" onclick="togglePresetModal(true)" title="프리셋 목록 및 추가/삭제 관리">
-                    목록 관리
-                </button>
-            </div>
 
         </div>
     </header>
@@ -56,8 +42,8 @@
                 <div id="view-deckbuilder">
                     <!-- 안내 문구 카드 -->
                     <div class="info-card">
-                        <span>아래 1~3번 항목(캐릭터·동료·룬)을 채우면, 조합만으로 나오는 딜 배율을 기준으로 <b>덱 구성 추천</b> 결과를 보여줍니다. (공격력은 100 또는 1로 고정 — 순수 조합 효율만 비교)</span>
-                        <span class="info-version">v0.1.0-draft</span>
+                        <span>아래 1~4번 항목(캐릭터·동료·룬·스킬)을 채우면, 조합만으로 나오는 딜 배율을 기준으로 <b>덱 구성 추천</b> 결과를 보여줍니다. (공격력은 직접 지정 — 순수 조합 효율만 비교)</span>
+                        <span class="info-version">v0.2.0-draft</span>
                     </div>
 
                     <!-- TAB 1: 캐릭터 & 전직 -->
@@ -73,6 +59,17 @@
                                 <option value="normal">일반 (3초간 2000%)</option>
                                 <option value="expert" selected>숙련된 (15초간 2000%)</option>
                             </select>
+                            </div>
+                        </div>
+
+                        <div class="base-atk-field">
+                            <div class="base-atk-head">
+                                <label class="form-label" for="base-atk-input" style="margin-bottom:0;">기본 공격력</label>
+                                <span class="base-atk-hint">1 ~ 10,000 사이에서 직접 조정 — 조합 자체의 딜 배율만 비교하기 위한 기준값입니다.</span>
+                            </div>
+                            <div class="base-atk-controls">
+                                <input type="range" id="base-atk-slider" min="1" max="10000" step="1" value="100">
+                                <input type="number" id="base-atk-input" min="1" max="10000" step="1" value="100">
                             </div>
                         </div>
                     </section>
@@ -128,6 +125,24 @@
                         <p class="placeholder-text"> 냥혼석 설정 영역은 준비 중입니다.</p>
                     </section>
 
+                    <!-- TAB 4: 스킬 -->
+                    <section id="tab-skills" class="tab-content">
+                        <h2 class="section-title">
+                            4. 스킬
+                        </h2>
+
+                        <div class="equip-block">
+                            <div class="equip-block-head">
+                                <span class="equip-block-title">스킬</span>
+                                <span class="equip-count-badge" id="skill-slot-count-badge">0 / 6</span>
+                            </div>
+                            <div id="skill-slot-grid" class="equip-slot-grid">
+                                <!-- js/skill-equip.js가 슬롯을 렌더링합니다 -->
+                            </div>
+                            <p class="placeholder-text">🔒 표시가 붙은 스킬은 "고유" 태그가 있는 스킬로, 덱 전체에서 1개만 장착할 수 있습니다.</p>
+                        </div>
+                    </section>
+
                     <!-- 룬 선택 피커 모달 -->
                     <div id="rune-picker-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeRunePicker()">
                         <div class="modal-card rune-picker-card">
@@ -174,25 +189,53 @@
                         </div>
                     </div>
 
-                    <!-- 덱 구성 추천 결과 (로직 준비 중) -->
+                    <!-- 스킬 선택 피커 모달 -->
+                    <div id="skill-picker-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeSkillPicker()">
+                        <div class="modal-card skill-picker-modal-card">
+                            <div class="modal-header">
+                                <h3 class="modal-title">스킬 선택</h3>
+                                <button type="button" class="modal-close-btn" onclick="closeSkillPicker()">✕</button>
+                            </div>
+
+                            <div class="db-filter-bar">
+                                <div class="filter-group">
+                                    <input type="text" id="skill-picker-search-input" class="form-input" style="width: 220px;" placeholder="🔍 스킬 이름으로 검색..." oninput="filterSkillPicker('search', this.value)">
+                                </div>
+                                <div class="filter-group" id="skill-picker-grade-filter">
+                                    <!-- js/skill-equip.js가 등급 버튼을 채웁니다 -->
+                                </div>
+                            </div>
+
+                            <div id="skill-picker-grid" class="skill-picker-grid">
+                                <!-- js/skill-equip.js가 선택 가능한 스킬 목록을 렌더링합니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 덱 구성 추천 결과 -->
                     <section id="panel-deck-recommend" class="tab-content">
                         <h2 class="section-title">
                             🧮 덱 구성 추천 결과
                         </h2>
-                        <p class="placeholder-text">동료/스킬/룬 조합에 따른 딜 배율을 계산해서 추천 덱을 보여줄 예정입니다. (로직 준비 중)</p>
+                        <p class="placeholder-text">기본 공격력 + 장착한 동료·스킬의 보유효과, 스킬 효과 수치를 바탕으로 예상 딜량을 계산합니다. (효과 문구에서 숫자를 자동으로 읽어오는 방식이라 근사치입니다.)</p>
 
                         <div class="deck-plan-note">
-                            <div class="deck-plan-note-title">📌 설계 기준 (진행 중인 방향)</div>
+                            <div class="deck-plan-note-title">📌 계산 방식</div>
                             <ul class="deck-plan-note-list">
-                                <li>공격력은 100 또는 1로 고정 — 오로지 동료·스킬·룬 조합 자체의 배율만으로 딜량 비교</li>
-                                <li>성급/등급은 <b>12성 · 25성 · 10각</b> 정도의 기준점만 두고 비교 (13~24성처럼 세밀한 구간별 계산은 생략 — 13성 이후부턴 기존 효과 수치만 증가하고 새 효과는 추가되지 않기 때문)</li>
-                                <li>룬 도감 · 동료 도감의 데이터(rune 데이터, companion.json)는 그대로 재사용, 별도의 열람용 도감 페이지는 두지 않음</li>
+                                <li>기본 공격력(1~10,000)에 장착한 동료·스킬의 "보유 효과" 중 공격력 증폭(%) 값을 전부 합산해 <b>최종 공격력</b>을 구합니다.</li>
+                                <li>장착한 스킬마다 "효과" 문구에서 가장 큰 퍼센트(%) 수치를 찾아 <b>최종 공격력 × 그 수치</b>로 예상 피해량을 계산합니다.</li>
+                                <li>스킬 6개의 예상 피해량을 모두 더한 값을 <b>총 예상 딜량</b>으로 보여줍니다.</li>
+                                <li>성급/등급은 12성 · 25성 · 10각 기준점만 두고 비교 (13~24성처럼 세밀한 구간별 계산은 생략)</li>
                             </ul>
                         </div>
 
-                        <button type="button" class="btn-submit" disabled>
-                            덱 구성 추천 받기 (데이터 준비 중)
+                        <button type="button" class="btn-submit" id="deck-recommend-btn" onclick="calcDeckDamage()">
+                            🧮 덱 구성 추천 받기
                         </button>
+
+                        <div id="deck-damage-result" class="deck-damage-result hidden">
+                            <!-- js/calc.js의 calcDeckDamage()가 결과를 렌더링합니다 -->
+                        </div>
                     </section>
                 </div>
                 <!-- /view-deckbuilder -->
@@ -229,7 +272,7 @@
                         <div class="deck-plan-note">
                             <div class="deck-plan-note-title">📌 세공 규칙</div>
                             <ul class="deck-plan-note-list">
-                                <li>각 옵션(증가능력1 · 증가능력2 · 감소능력)마다 10번의 기회가 주어집니다.</li>
+                                <li>각 옵션(증가능력1 · 증가능력2 · 감소능력1)마다 10번의 기회가 주어집니다.</li>
                                 <li>세공 확률은 <b>3개 옵션이 전부 공유</b>합니다 — 어느 옵션에서 성공하든 전체 확률이 -10%p, 실패하면 +10%p (예: 증가능력1 성공 65% → 증가능력2 성공 55% → 다음 실패 시 다시 65%).</li>
                                 <li>세공 확률은 75%에서 시작하며, 최저 25% · 최고 75%로 고정됩니다.</li>
                                 <li>레벨 1은 4번 성공, 레벨 2는 7번 성공, 레벨 3은 9번 성공 시 달성됩니다 (옵션별로 각자 카운트).</li>
@@ -244,28 +287,6 @@
         </main>
     </div>
 
-    <!-- 프리셋 목록 관리 모달 -->
-    <div id="preset-modal" class="modal-backdrop hidden" onclick="if(event.target === this) togglePresetModal(false)">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 class="modal-title">📋 프리셋 목록 관리</h3>
-                <button type="button" class="modal-close-btn" onclick="togglePresetModal(false)">✕</button>
-            </div>
-
-            <!-- 신규 프리셋 생성 입력바 -->
-            <div class="preset-add-bar">
-                <input type="text" id="preset-new-name" class="form-input" placeholder="새 프리셋 이름 입력 (예: PVP 전용)" />
-                <button type="button" class="btn-preset-action btn-preset-save" onclick="createNewPresetFromInput()">
-                    ➕ 새 프리셋 추가
-                </button>
-            </div>
-
-            <div class="modal-divider"></div>
-
-            <!-- 프리셋 리스트 영역 -->
-            <div id="preset-modal-list" class="preset-list"></div>
-        </div>
-    </div>
 
     <!-- 덱 구성 추천 페이지 전용: 우하단 "성급 변화" 물음표 버튼 (덱 구성 추천 뷰에서만 표시) -->
     <button type="button" id="star-state-fab" class="star-state-fab hidden" onclick="openStarStateModal()" title="성급별 별 모양 및 개수 변화 보기">
@@ -289,7 +310,8 @@
     <script src="js/rune.js"></script>
     <script src="js/companion.js"></script>
     <script src="js/companion-equip.js"></script>
-    <script src="js/star-state.js"></script>
+    <script src="js/skills.js"></script>
+    <script src="js/skill-equip.js"></script>
     <script src="js/soulstone.js"></script>
     <script src="js/rune-equip.js"></script>
     <script src="js/preset.js"></script>
