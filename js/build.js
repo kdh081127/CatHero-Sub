@@ -10,11 +10,13 @@
 
 const BUILD_STORAGE_KEY = "cathero_saved_builds";
 
-// 사이드탭 컨테이너 id 매핑 (섹션 key -> 빌드 리스트를 그릴 DOM id)
+// 사이드탭/모달 컨테이너 id 매핑 (key -> 빌드 리스트를 그릴 DOM id)
+// "modal"은 "📂 덱 구성 불러오기" 버튼으로 여는 전역 모달의 목록입니다.
 const BUILD_LIST_CONTAINER_IDS = {
     companions: "build-list-companions",
     runes: "build-list-runes",
     skills: "build-list-skills",
+    modal: "build-load-modal-list",
 };
 
 /* ==========================================================================
@@ -68,6 +70,20 @@ function switchSidePanel(sectionKey, btnEl) {
     });
 
     if (panelName === "builds") renderBuildListInto(sectionKey);
+}
+
+/* ==========================================================================
+   1-1. "📂 덱 구성 불러오기" 모달
+   ========================================================================== */
+function openBuildLoadModal() {
+    renderBuildListInto("modal");
+    const modal = document.getElementById("build-load-modal");
+    if (modal) modal.classList.remove("hidden");
+}
+
+function closeBuildLoadModal() {
+    const modal = document.getElementById("build-load-modal");
+    if (modal) modal.classList.add("hidden");
 }
 
 /* ==========================================================================
@@ -237,6 +253,7 @@ function applyBuild(id) {
     if (typeof renderEquipSlots === "function") renderEquipSlots();
     const skillRefreshed = refreshSkillEquipUI();
 
+    closeBuildLoadModal();
     alert(`'${build.name}' 빌드를 적용했습니다.`);
 
     // 스킬 슬롯을 즉시 다시 그릴 방법을 못 찾은 경우에만 안전하게 새로고침
