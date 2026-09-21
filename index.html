@@ -81,10 +81,6 @@
                         </h2>
 
                         <div class="section-side-layout" data-section-key="companions">
-                            <div class="section-side-tabs">
-                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('companions', this)">🐾 직접 선택</button>
-                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('companions', this)">📋 저장한 빌드</button>
-                            </div>
 
                             <div class="section-side-content">
                                 <div class="section-side-panel" data-panel="manual">
@@ -103,11 +99,7 @@
                                 </div>
 
                                 <div class="section-side-panel hidden" data-panel="builds">
-                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
-                                    <div class="build-save-bar">
-                                        <input type="text" id="build-name-input-companions" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
-                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('companions')">＋ 현재 조합 저장</button>
-                                    </div>
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다. (새 빌드 저장은 3번 스킬까지 다 채운 뒤 맨 아래 "빌드로 저장" 영역에서 합니다.)</p>
                                     <div class="preset-list build-list" id="build-list-companions">
                                         <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
                                     </div>
@@ -123,10 +115,6 @@
                         </h2>
 
                         <div class="section-side-layout" data-section-key="runes">
-                            <div class="section-side-tabs">
-                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('runes', this)">🔹 직접 선택</button>
-                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('runes', this)">📋 저장한 빌드</button>
-                            </div>
 
                             <div class="section-side-content">
                                 <div class="section-side-panel" data-panel="manual">
@@ -156,11 +144,7 @@
                                 </div>
 
                                 <div class="section-side-panel hidden" data-panel="builds">
-                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
-                                    <div class="build-save-bar">
-                                        <input type="text" id="build-name-input-runes" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
-                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('runes')">＋ 현재 조합 저장</button>
-                                    </div>
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다. (새 빌드 저장은 3번 스킬까지 다 채운 뒤 맨 아래 "빌드로 저장" 영역에서 합니다.)</p>
                                     <div class="preset-list build-list" id="build-list-runes">
                                         <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
                                     </div>
@@ -176,10 +160,6 @@
                         </h2>
 
                         <div class="section-side-layout" data-section-key="skills">
-                            <div class="section-side-tabs">
-                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('skills', this)">⚡ 직접 선택</button>
-                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('skills', this)">📋 저장한 빌드</button>
-                            </div>
 
                             <div class="section-side-content">
                                 <div class="section-side-panel" data-panel="manual">
@@ -196,17 +176,27 @@
                                 </div>
 
                                 <div class="section-side-panel hidden" data-panel="builds">
-                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
-                                    <div class="build-save-bar">
-                                        <input type="text" id="build-name-input-skills" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
-                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('skills')">＋ 현재 조합 저장</button>
-                                    </div>
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다. (새 빌드 저장은 바로 아래 "빌드로 저장" 영역에서 합니다.)</p>
                                     <div class="preset-list build-list" id="build-list-skills">
                                         <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </section>
+
+                    <!-- 빌드 저장: 동료·룬·스킬을 각각 1개 이상 채운 뒤에만 저장 가능 -->
+                    <section id="tab-build-save" class="tab-content">
+                        <h2 class="section-title">
+                            빌드로 저장
+                        </h2>
+                        <p class="placeholder-text">위 2~4번(동료·룬·스킬)을 각각 최소 1개 이상 장착하면, 지금 조합 전체를 빌드 하나로 저장할 수 있습니다. 저장한 빌드는 2~4번 각 파트의 "📋 저장한 빌드" 탭에서 바로 적용할 수 있습니다.</p>
+
+                        <div class="build-save-bar">
+                            <input type="text" id="build-name-input-global" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
+                            <button type="button" id="build-save-btn-global" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('global')" disabled>＋ 현재 조합 저장</button>
+                        </div>
+                        <p id="build-readiness-msg" class="build-readiness-msg"></p>
                     </section>
 
                     <!-- 룬 선택 피커 모달 -->
@@ -380,7 +370,6 @@
     <script src="js/skill-equip.js"></script>
     <script src="js/soulstone.js"></script>
     <script src="js/rune-equip.js"></script>
-    <script src="js/preset.js"></script>
     <script src="js/build.js"></script>
     <script src="js/calc.js"></script>
     <script src="js/main.js"></script>

@@ -159,6 +159,18 @@ html {
     background-color: #fef3c7;
 }
 
+.btn-preset-save:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    border-color: #e2e8f0;
+}
+
+.btn-preset-save:disabled:hover {
+    background-color: #f1f5f9;
+}
+
 .btn-preset-manage {
     background-color: #ffffff;
     color: #64748b;
@@ -1213,10 +1225,8 @@ html {
     background: #dc2626;
 }
 
-
 /* 장착 슬롯 안의 등급/타입 배지는 도감 카드용 기본 크기(0.75rem)보다
    한 단계 작게 써서, 이름이 2줄이 되어도 카드 높이 안에 여유 있게 들어가도록 합니다. */
-
 .equip-slot .companion-type-badge,
 .equip-slot .rune-type-badge,
 .equip-slot .skill-type-badge {
@@ -3324,7 +3334,6 @@ html {
     color: #92400e;
 }
 
-
 /* ==========================================================================
    18. 덱 구성 추천 - 성급 기준별(12성/25성/25성 10각) 딜량 비교
    ----------------------------------------------------------------------
@@ -3477,9 +3486,7 @@ html {
     gap: 1rem;
 }
 
-
 /* 데스크톱: 왼쪽에 세로로 쌓인 탭 버튼 열 */
-
 .section-side-tabs {
     flex: 0 0 8rem;
     display: flex;
@@ -3565,6 +3572,22 @@ html {
 .build-item .preset-item-date {
     /* 요약 텍스트(동료 N · 룬 N · 스킬 N)가 길어질 수 있어 줄바꿈 허용 */
     white-space: normal;
+}
+
+/* "🗂 빌드로 저장" 섹션: 동료/룬/스킬 완료 여부 안내 문구 */
+.build-readiness-msg {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.build-readiness-msg.is-warning {
+    color: #b45309;
+}
+
+.build-readiness-msg:empty {
+    display: none;
 }
 
 @media (max-width: 768px) {

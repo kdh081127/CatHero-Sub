@@ -42,7 +42,7 @@ function escapeHtml(str) {
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#39;",
-    } [c]));
+    }[c]));
 }
 
 // 빌드 목록에 표시할 "동료 4 · 룬 7 · 스킬 6" 요약 텍스트
@@ -108,8 +108,70 @@ function renderAllBuildLists() {
 
 /* ==========================================================================
    3. 빌드 저장
+   ----------------------------------------------------------------------
+   ⚠️ 예전에는 동료/룬/스킬 탭마다 각각 "저장" 입력창이 있었는데, 어차피
+   빌드 하나가 세 파트를 통째로 저장하는 거라 3곳에 나눠 저장할 필요가
+   없다는 피드백을 반영해 저장 UI를 "🗂 빌드로 저장" 섹션 한 곳으로
+   합쳤습니다. 동료·룬·스킬을 각각 최소 1개 이상 장착해야만(=isBuildReady)
+   저장 버튼이 활성화됩니다.
    ========================================================================== */
+function isBuildReady() {
+    if (typeof userState === "undefined") return false;
+    const companionCount = (userState.equippedCompanions || []).filter(Boolean).length;
+    const runeCount = (userState.equippedMainRunes || []).filter(Boolean).length + (userState.equippedSubRunes || []).filter(Boolean).length;
+    const skillCount = (userState.equippedSkills || []).filter(Boolean).length;
+    return companionCount > 0 && runeCount > 0 && skillCount > 0;
+}
+
+function buildReadinessMissingParts() {
+    if (typeof userState === "undefined") return ["동료", "룬", "스킬"];
+    const missing = [];
+    const companionCount = (userState.equippedCompanions || []).filter(Boolean).length;
+    const runeCount = (userState.equippedMainRunes || []).filter(Boolean).length + (userState.equippedSubRunes || []).filter(Boolean).length;
+    const skillCount = (userState.equippedSkills || []).filter(Boolean).length;
+    if (companionCount === 0) missing.push("동료");
+    if (runeCount === 0) missing.push("룬");
+    if (skillCount === 0) missing.push("스킬");
+    return missing;
+}
+
+// 동료/룬/스킬 슬롯 그리드가 다시 그려질 때마다(장착·해제·빌드 적용 등) 자동으로
+// 저장 버튼 활성화 상태를 갱신합니다. companion-equip.js/rune-equip.js/
+// skill-equip.js 내부 함수 이름을 몰라도 동작하도록 DOM 변화를 직접 감시합니다.
+function updateBuildReadinessUI() {
+    const btn = document.getElementById("build-save-btn-global");
+    const msg = document.getElementById("build-readiness-msg");
+    const ready = isBuildReady();
+
+    if (btn) btn.disabled = !ready;
+    if (msg) {
+        if (ready) {
+            msg.textContent = "";
+            msg.classList.remove("is-warning");
+        } else {
+            const missing = buildReadinessMissingParts();
+            msg.textContent = `${missing.join(" · ")} 파트를 먼저 1개 이상 장착해주세요.`;
+            msg.classList.add("is-warning");
+        }
+    }
+}
+
+function watchEquipGridsForBuildReadiness() {
+    const gridIds = ["companion-slot-grid", "main-rune-slot-grid", "sub-rune-slot-grid", "skill-slot-grid"];
+    gridIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new MutationObserver(updateBuildReadinessUI).observe(el, { childList: true, subtree: true });
+    });
+    updateBuildReadinessUI();
+}
+
 function saveCurrentBuild(sectionKey) {
+    if (!isBuildReady()) {
+        alert("동료·룬·스킬을 각각 최소 1개 이상 장착한 뒤에 저장할 수 있습니다.");
+        return;
+    }
+
     const input = document.getElementById(`build-name-input-${sectionKey}`);
     const name = input ? input.value.trim() : "";
     if (!name) {
@@ -198,3 +260,4 @@ function deleteBuild(id) {
 }
 
 document.addEventListener("DOMContentLoaded", renderAllBuildLists);
+document.addEventListener("DOMContentLoaded", watchEquipGridsForBuildReadiness);
