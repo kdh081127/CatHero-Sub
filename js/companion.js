@@ -8,11 +8,22 @@
  * 이 파일은 이제 companion.json을 불러와 전역 companionData 배열에
  * 담아두는 역할만 합니다. 덱 구성 추천 페이지에서 동료 선택 UI를 붙일 때
  * 이 companionData를 그대로 사용하면 됩니다.
+ *
+ * ⚠️ 스키마 변경 (전설/신화 등급만 사용하는 최종 데이터):
+ *   - uncommon/rare/epic 등급은 더 이상 존재하지 않습니다 (덱 구성에는
+ *     전설/신화만 필요하다는 판단으로 데이터에서 제거되었습니다).
+ *   - type/size 필드는 항상 빈 문자열입니다 ("고유" 태그 정보가 더 이상
+ *     이 필드에 담기지 않습니다 - companion-equip.js의 관련 주석 참고).
+ *   - holdEffect / holdEffect12 / holdEffect25 필드는 더 이상 존재하지
+ *     않습니다. 대신 special-effect[] (최대 4개, 각 {effect: "..."}) 와
+ *     awaken / awaken+10 ({effect: "..."}) 로 효과 텍스트가 제공됩니다.
  * ----------------------------------------------------------------------
  */
 let companionData = [];
 
 // 등급 표기용 매핑 (rune.js의 RUNE_GRADE_NAMES와 동일한 체계)
+// 최종 데이터에는 legendary/mythic만 존재하지만, 과거 데이터/다른 화면과
+// 호환을 위해 나머지 등급 이름도 매핑은 남겨둡니다 (해당 등급 데이터는 없음).
 const COMPANION_GRADE_NAMES = {
     uncommon: "언커먼",
     rare: "레어",

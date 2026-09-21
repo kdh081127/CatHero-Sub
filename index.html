@@ -80,18 +80,40 @@
                             2. 동료, 탈것 및 가디언
                         </h2>
 
-                        <div class="equip-block">
-                            <div class="equip-block-head">
-                                <span class="equip-block-title">동료</span>
-                                <span class="equip-count-badge" id="companion-slot-count-badge">0 / 6</span>
+                        <div class="section-side-layout" data-section-key="companions">
+                            <div class="section-side-tabs">
+                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('companions', this)">🐾 직접 선택</button>
+                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('companions', this)">📋 저장한 빌드</button>
                             </div>
-                            <div id="companion-slot-grid" class="equip-slot-grid">
-                                <!-- js/companion-equip.js가 슬롯을 렌더링합니다 -->
-                            </div>
-                            <p class="placeholder-text">🔒 표시가 붙은 동료는 "고유" 태그가 있는 동료로, 덱 전체에서 1마리만 장착할 수 있습니다.</p>
-                        </div>
 
-                        <p class="placeholder-text">탈것 및 가디언 설정 영역은 준비 중입니다.</p>
+                            <div class="section-side-content">
+                                <div class="section-side-panel" data-panel="manual">
+                                    <div class="equip-block">
+                                        <div class="equip-block-head">
+                                            <span class="equip-block-title">동료</span>
+                                            <span class="equip-count-badge" id="companion-slot-count-badge">0 / 6</span>
+                                        </div>
+                                        <div id="companion-slot-grid" class="equip-slot-grid">
+                                            <!-- js/companion-equip.js가 슬롯을 렌더링합니다 -->
+                                        </div>
+                                        <p class="placeholder-text">🔒 표시가 붙은 동료는 "고유" 태그가 있는 동료로, 덱 전체에서 1마리만 장착할 수 있습니다.</p>
+                                    </div>
+
+                                    <p class="placeholder-text">탈것 및 가디언 설정 영역은 준비 중입니다.</p>
+                                </div>
+
+                                <div class="section-side-panel hidden" data-panel="builds">
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
+                                    <div class="build-save-bar">
+                                        <input type="text" id="build-name-input-companions" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
+                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('companions')">＋ 현재 조합 저장</button>
+                                    </div>
+                                    <div class="preset-list build-list" id="build-list-companions">
+                                        <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <!-- TAB 3: 룬 & 냥혼석 (초기 숨김) -->
@@ -100,29 +122,51 @@
                             3. 메인/서브 룬 및 냥혼석
                         </h2>
 
-                        <!-- 메인(특수) 룬 장착 슬롯 (최대 4개) -->
-                        <div class="equip-block">
-                            <div class="equip-block-head">
-                                <span class="equip-block-title">메인 특수 룬</span>
-                                <span class="equip-count-badge" id="main-rune-count-badge">0 / 4</span>
+                        <div class="section-side-layout" data-section-key="runes">
+                            <div class="section-side-tabs">
+                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('runes', this)">🔹 직접 선택</button>
+                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('runes', this)">📋 저장한 빌드</button>
                             </div>
-                            <div id="main-rune-slot-grid" class="equip-slot-grid">
-                                <!-- js/rune-equip.js가 슬롯 4개를 렌더링합니다 -->
+
+                            <div class="section-side-content">
+                                <div class="section-side-panel" data-panel="manual">
+                                    <!-- 메인(특수) 룬 장착 슬롯 (최대 4개) -->
+                                    <div class="equip-block">
+                                        <div class="equip-block-head">
+                                            <span class="equip-block-title">메인 특수 룬</span>
+                                            <span class="equip-count-badge" id="main-rune-count-badge">0 / 4</span>
+                                        </div>
+                                        <div id="main-rune-slot-grid" class="equip-slot-grid">
+                                            <!-- js/rune-equip.js가 슬롯 4개를 렌더링합니다 -->
+                                        </div>
+                                    </div>
+
+                                    <!-- 서브 룬 장착 슬롯 (최대 6개) -->
+                                    <div class="equip-block">
+                                        <div class="equip-block-head">
+                                            <span class="equip-block-title">서브 룬</span>
+                                            <span class="equip-count-badge" id="sub-rune-count-badge">0 / 6</span>
+                                        </div>
+                                        <div id="sub-rune-slot-grid" class="equip-slot-grid">
+                                            <!-- js/rune-equip.js가 슬롯 6개를 렌더링합니다 -->
+                                        </div>
+                                    </div>
+
+                                    <p class="placeholder-text"> 냥혼석 설정 영역은 준비 중입니다.</p>
+                                </div>
+
+                                <div class="section-side-panel hidden" data-panel="builds">
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
+                                    <div class="build-save-bar">
+                                        <input type="text" id="build-name-input-runes" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
+                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('runes')">＋ 현재 조합 저장</button>
+                                    </div>
+                                    <div class="preset-list build-list" id="build-list-runes">
+                                        <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- 서브 룬 장착 슬롯 (최대 6개) -->
-                        <div class="equip-block">
-                            <div class="equip-block-head">
-                                <span class="equip-block-title">서브 룬</span>
-                                <span class="equip-count-badge" id="sub-rune-count-badge">0 / 6</span>
-                            </div>
-                            <div id="sub-rune-slot-grid" class="equip-slot-grid">
-                                <!-- js/rune-equip.js가 슬롯 6개를 렌더링합니다 -->
-                            </div>
-                        </div>
-
-                        <p class="placeholder-text"> 냥혼석 설정 영역은 준비 중입니다.</p>
                     </section>
 
                     <!-- TAB 4: 스킬 -->
@@ -131,15 +175,37 @@
                             4. 스킬
                         </h2>
 
-                        <div class="equip-block">
-                            <div class="equip-block-head">
-                                <span class="equip-block-title">스킬</span>
-                                <span class="equip-count-badge" id="skill-slot-count-badge">0 / 6</span>
+                        <div class="section-side-layout" data-section-key="skills">
+                            <div class="section-side-tabs">
+                                <button type="button" class="side-tab-btn active" data-panel="manual" onclick="switchSidePanel('skills', this)">⚡ 직접 선택</button>
+                                <button type="button" class="side-tab-btn" data-panel="builds" onclick="switchSidePanel('skills', this)">📋 저장한 빌드</button>
                             </div>
-                            <div id="skill-slot-grid" class="equip-slot-grid">
-                                <!-- js/skill-equip.js가 슬롯을 렌더링합니다 -->
+
+                            <div class="section-side-content">
+                                <div class="section-side-panel" data-panel="manual">
+                                    <div class="equip-block">
+                                        <div class="equip-block-head">
+                                            <span class="equip-block-title">스킬</span>
+                                            <span class="equip-count-badge" id="skill-slot-count-badge">0 / 6</span>
+                                        </div>
+                                        <div id="skill-slot-grid" class="equip-slot-grid">
+                                            <!-- js/skill-equip.js가 슬롯을 렌더링합니다 -->
+                                        </div>
+                                        <p class="placeholder-text">🔒 표시가 붙은 스킬은 "고유" 태그가 있는 스킬로, 덱 전체에서 1개만 장착할 수 있습니다.</p>
+                                    </div>
+                                </div>
+
+                                <div class="section-side-panel hidden" data-panel="builds">
+                                    <p class="build-panel-desc">빌드 하나는 동료·룬·스킬 조합을 통째로 저장합니다. 아래 목록에서 빌드를 고르면 세 파트가 한 번에 그 조합으로 장착됩니다.</p>
+                                    <div class="build-save-bar">
+                                        <input type="text" id="build-name-input-skills" class="form-input" placeholder="예: 늑대 딜러 세팅" maxlength="20">
+                                        <button type="button" class="btn-preset-action btn-preset-save" onclick="saveCurrentBuild('skills')">＋ 현재 조합 저장</button>
+                                    </div>
+                                    <div class="preset-list build-list" id="build-list-skills">
+                                        <!-- js/build.js가 저장된 빌드 목록을 렌더링합니다 -->
+                                    </div>
+                                </div>
                             </div>
-                            <p class="placeholder-text">🔒 표시가 붙은 스킬은 "고유" 태그가 있는 스킬로, 덱 전체에서 1개만 장착할 수 있습니다.</p>
                         </div>
                     </section>
 
@@ -315,6 +381,7 @@
     <script src="js/soulstone.js"></script>
     <script src="js/rune-equip.js"></script>
     <script src="js/preset.js"></script>
+    <script src="js/build.js"></script>
     <script src="js/calc.js"></script>
     <script src="js/main.js"></script>
 </body>

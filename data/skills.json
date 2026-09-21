@@ -95,7 +95,7 @@
         "image": "assets/skills/uncommon/k.2-6.png",
         "grade": "uncommon",
         "cooldown": "8.7초",
-        "effect": "초토화 로켓을 발사하여 공격력 107&만큼의\n범위피해를 입힙니다.",
+        "effect": "초토화 로켓을 발사하여 공격력 107%만큼의\n범위피해를 입힙니다.",
         "holdEffect": "공격력 증폭 +2%"
     },
     {

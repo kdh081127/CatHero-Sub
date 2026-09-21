@@ -1112,11 +1112,21 @@ html {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
     gap: 0.75rem;
+    min-width: 0;
+    width: 100%;
 }
 
 .equip-slot {
     position: relative;
-    aspect-ratio: 1 / 1;
+    /* 예전에는 aspect-ratio: 1/1(정사각형 고정) + overflow: hidden 이었는데,
+       이미지+이름(최대 2줄)+등급 배지가 모두 들어가면 좁은 화면(모바일 4열)에서
+       정사각형 높이보다 내용물이 더 길어져 배지가 잘리거나 겹쳐 보이는
+       문제가 있었습니다. 높이를 내용물에 맞춰 자동으로 늘어나게 바꾸고
+       min-height로 카드 크기를 맞춥니다. */
+    min-height: 7rem;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
@@ -1174,6 +1184,8 @@ html {
     font-weight: 700;
     line-height: 1.15;
     word-break: keep-all;
+    overflow-wrap: anywhere;
+    max-width: 100%;
     color: #1e293b;
 }
 
@@ -1199,6 +1211,17 @@ html {
 
 .equip-slot-remove:hover {
     background: #dc2626;
+}
+
+
+/* 장착 슬롯 안의 등급/타입 배지는 도감 카드용 기본 크기(0.75rem)보다
+   한 단계 작게 써서, 이름이 2줄이 되어도 카드 높이 안에 여유 있게 들어가도록 합니다. */
+
+.equip-slot .companion-type-badge,
+.equip-slot .rune-type-badge,
+.equip-slot .skill-type-badge {
+    font-size: 0.625rem;
+    padding: 0.1rem 0.4rem;
 }
 
 
@@ -1409,14 +1432,21 @@ html {
         word-break: keep-all;
         overflow-wrap: break-word;
     }
-    /* 장착 슬롯 (메인/서브 룬) */
+    /* 장착 슬롯 (메인/서브 룬, 동료, 스킬 공용) */
     .equip-slot-grid {
         grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
         gap: 0.5rem;
     }
+    .equip-slot {
+        min-height: 6.25rem;
+        padding: 0.4rem;
+    }
     .equip-slot-img {
         width: 32px;
         height: 32px;
+    }
+    .equip-slot-name {
+        font-size: 0.625rem;
     }
     /* 빌드 추천 / 룬 카드 클릭 상세 모달 */
     .rune-modal-card,
@@ -1495,9 +1525,31 @@ html {
     }
     .equip-slot-grid {
         grid-template-columns: repeat(4, 1fr);
+        gap: 0.4rem;
+    }
+    .equip-slot {
+        min-height: 5.75rem;
+        padding: 0.35rem 0.25rem;
+        gap: 0.15rem;
+    }
+    .equip-slot-img {
+        width: 28px;
+        height: 28px;
     }
     .equip-slot-name {
-        font-size: 0.625rem;
+        font-size: 0.5625rem;
+        line-height: 1.1;
+    }
+    .equip-slot .companion-type-badge,
+    .equip-slot .rune-type-badge,
+    .equip-slot .skill-type-badge {
+        font-size: 0.5625rem;
+        padding: 0.05rem 0.3rem;
+    }
+    .equip-slot-remove {
+        width: 1.0625rem;
+        height: 1.0625rem;
+        font-size: 0.5625rem;
     }
     /* 빌드 추천 룬 칩: 줄바꿈 되면서 작게 */
     .build-rune-chip {
@@ -3270,4 +3322,270 @@ html {
     font-size: 1.25rem;
     font-weight: 900;
     color: #92400e;
+}
+
+
+/* ==========================================================================
+   18. 덱 구성 추천 - 성급 기준별(12성/25성/25성 10각) 딜량 비교
+   ----------------------------------------------------------------------
+   calc.js의 calcDeckDamage()가 만드는 마크업과 짝을 이루는 스타일입니다.
+   (기존에 calc.js가 결과 박스 안에 임시로 넣어두던 인라인 <style>을
+   이 섹션으로 옮기고, 사이트의 실제 색상 팔레트에 맞춰 다시 정리했습니다.
+   calc.js 쪽 인라인 <style>은 이 클래스들이 정식으로 자리잡으면 지워도 됩니다.)
+   ========================================================================== */
+
+.deck-damage-tier-compare {
+    margin-top: 1rem;
+}
+
+.deck-damage-tier-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.625rem;
+    margin-top: 0.5rem;
+}
+
+.deck-damage-tier-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+    padding: 0.875rem 0.5rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.deck-damage-tier-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
+}
+
+.deck-damage-tier-atk {
+    font-size: 0.6875rem;
+    color: #94a3b8;
+}
+
+.deck-damage-tier-dmg {
+    font-size: 1.0625rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.deck-damage-tier-growth {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #b45309;
+}
+
+.deck-damage-tier-details {
+    margin-top: 0.875rem;
+}
+
+.deck-damage-tier-detail {
+    margin-bottom: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+}
+
+.deck-damage-tier-detail:last-child {
+    margin-bottom: 0;
+}
+
+.deck-damage-tier-detail summary {
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    color: #334155;
+    outline: none;
+    list-style: none;
+}
+
+.deck-damage-tier-detail summary::-webkit-details-marker {
+    display: none;
+}
+
+.deck-damage-tier-detail summary::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 0.375rem;
+    color: #94a3b8;
+    transition: transform 0.12s ease;
+}
+
+.deck-damage-tier-detail[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.deck-damage-tier-detail[open] summary {
+    margin-bottom: 0.625rem;
+    color: #b45309;
+}
+
+.deck-damage-unresolved {
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.deck-damage-unresolved-list {
+    margin: 0.375rem 0 0;
+    padding-left: 1.125rem;
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+    .deck-damage-tier-cols {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .deck-damage-tier-col {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 0.75rem 0.875rem;
+    }
+    .deck-damage-tier-title {
+        flex: 0 0 auto;
+        min-width: 5rem;
+    }
+    .deck-damage-tier-atk {
+        display: none;
+        /* 좁은 화면에서는 최종 공격력 보조 텍스트는 생략, 상세보기에서 확인 */
+    }
+    .deck-damage-tier-dmg {
+        font-size: 0.9375rem;
+    }
+}
+
+
+/* ==========================================================================
+   19. 동료 / 룬 / 스킬 사이드탭 - "직접 선택" ↔ "저장한 빌드"
+   ========================================================================== */
+
+.section-side-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+
+/* 데스크톱: 왼쪽에 세로로 쌓인 탭 버튼 열 */
+
+.section-side-tabs {
+    flex: 0 0 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    position: sticky;
+    top: 0.75rem;
+}
+
+.side-tab-btn {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    color: #64748b;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.side-tab-btn:hover {
+    border-color: #fde68a;
+    color: #b45309;
+    background-color: #fffbeb;
+}
+
+.side-tab-btn.active {
+    border-color: #f59e0b;
+    background-color: #fffbeb;
+    color: #b45309;
+}
+
+.section-side-content {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+
+.section-side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section-side-panel.hidden {
+    display: none !important;
+}
+
+.build-panel-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.build-save-bar {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.build-save-bar .form-input {
+    flex: 1 1 0%;
+}
+
+.build-list {
+    /* .preset-list 스타일(스크롤 최대높이 등)을 그대로 재사용 */
+}
+
+.build-list-empty {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background-color: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 0.75rem;
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.build-item .preset-item-date {
+    /* 요약 텍스트(동료 N · 룬 N · 스킬 N)가 길어질 수 있어 줄바꿈 허용 */
+    white-space: normal;
+}
+
+@media (max-width: 768px) {
+    /* 모바일에서는 옆(사이드)이 아니라 위쪽 가로 탭으로 전환 */
+    .section-side-layout {
+        flex-direction: column;
+    }
+    .section-side-tabs {
+        flex-direction: row;
+        width: 100%;
+        position: static;
+    }
+    .side-tab-btn {
+        flex: 1 1 0%;
+        justify-content: center;
+        text-align: center;
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    .build-save-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
