@@ -92,7 +92,7 @@
                                         <div id="companion-slot-grid" class="equip-slot-grid">
                                             <!-- js/companion-equip.js가 슬롯을 렌더링합니다 -->
                                         </div>
-                                        <p class="placeholder-text">🔒 표시가 붙은 동료는 "고유" 태그가 있는 동료로, 덱 전체에서 1마리만 장착할 수 있습니다.</p>
+                                        <p class="placeholder-text"> 표시가 붙은 동료는 "고유" 태그가 있는 동료로, 덱 전체에서 1마리만 장착할 수 있습니다.</p>
                                     </div>
 
                                     <p class="placeholder-text">탈것 및 가디언 설정 영역은 준비 중입니다.</p>
@@ -171,7 +171,7 @@
                                         <div id="skill-slot-grid" class="equip-slot-grid">
                                             <!-- js/skill-equip.js가 슬롯을 렌더링합니다 -->
                                         </div>
-                                        <p class="placeholder-text">🔒 표시가 붙은 스킬은 "고유" 태그가 있는 스킬로, 덱 전체에서 1개만 장착할 수 있습니다.</p>
+                                        <p class="placeholder-text"> 표시가 붙은 스킬은 "고유" 태그가 있는 스킬로, 덱 전체에서 1개만 장착할 수 있습니다.</p>
                                     </div>
                                 </div>
 
@@ -188,7 +188,7 @@
                     <!-- 빌드 저장/불러오기: 동료·룬·스킬을 각각 1개 이상 채운 뒤에만 저장 가능 -->
                     <section id="tab-build-save" class="tab-content">
                         <h2 class="section-title">
-                            빌드로 저장 / 불러오기
+                            🗂 빌드로 저장 / 불러오기
                         </h2>
                         <p class="placeholder-text">위 2~4번(동료·룬·스킬)을 각각 최소 1개 이상 장착하면, 지금 조합 전체를 빌드 하나로 저장할 수 있습니다. 저장해둔 빌드는 "덱 구성 불러오기" 버튼으로 언제든 다시 불러와 세 파트를 한 번에 장착할 수 있습니다.</p>
 
@@ -287,7 +287,7 @@
                     <!-- 덱 구성 추천 결과 -->
                     <section id="panel-deck-recommend" class="tab-content">
                         <h2 class="section-title">
-                            🧮 덱 구성 추천 결과
+                            덱 구성 추천 결과
                         </h2>
                         <p class="placeholder-text">기본 공격력 + 장착한 동료·스킬의 보유효과, 스킬 효과 수치를 바탕으로 예상 딜량을 계산합니다. (효과 문구에서 숫자를 자동으로 읽어오는 방식이라 근사치입니다.)</p>
 
@@ -308,6 +308,24 @@
                         <div id="deck-damage-result" class="deck-damage-result hidden">
                             <!-- js/calc.js의 calcDeckDamage()가 결과를 렌더링합니다 -->
                         </div>
+
+                        <div class="sim-section-divider"></div>
+
+                        <h3 class="deck-sim-title"> 정밀 시뮬레이션 (쿨타임 · 버프 · 디버프 · 중첩 반영)</h3>
+                        <p class="placeholder-text">4번 탭에 장착한 스킬 슬롯 순서 그대로, 쿨타임이 되는 대로 0.05초 간격으로 자동 시전한다고 가정하고 시간에 따라 딜을 계산합니다. 스킬·룬·동료 효과 문구에서 지속시간·확률·중첩 조건을 자동으로 읽어 버프/디버프를 반영합니다.</p>
+
+                        <div class="sim-duration-field">
+                            <label class="form-label" for="sim-duration-input" style="margin-bottom:0;">시뮬레이션 시간(초)</label>
+                            <input type="number" id="sim-duration-input" class="form-input" min="5" max="60" step="1" value="20">
+                        </div>
+
+                        <button type="button" class="btn-submit" id="deck-simulate-btn" onclick="runDeckSimulation()">
+                             시뮬레이션 실행
+                        </button>
+
+                        <div id="deck-simulation-result" class="deck-damage-result hidden">
+                            <!-- js/simulate.js의 runDeckSimulation()이 결과를 렌더링합니다 -->
+                        </div>
                     </section>
                 </div>
                 <!-- /view-deckbuilder -->
@@ -315,7 +333,7 @@
                 <!-- 냥혼석 세공 뷰 -->
                 <div id="view-soulstone" class="hidden">
                     <div class="page-hero-lite">
-                        <h2 class="section-title">💎 냥혼석 세공</h2>
+                        <h2 class="section-title"> 냥혼석 세공</h2>
                         <p class="placeholder-text">증가능력1 / 증가능력2 / 감소능력1, 매 칸마다 성공·실패를 기록하면 확률이 자동으로 갱신되고, 레벨 달성 확률도 실시간으로 계산됩니다.</p>
                     </div>
 
@@ -328,7 +346,7 @@
                                 </select>
                             </div>
                             <div class="soulstone-toolbar-actions">
-                                <button type="button" class="soulstone-toolbar-btn" onclick="undoSoulstoneLast()">↩ 취소</button>
+                                <button type="button" class="soulstone-toolbar-btn" onclick="undoSoulstoneLast()"> 취소</button>
                                 <button type="button" class="soulstone-toolbar-btn primary" onclick="resetSoulstone()"> 초기화</button>
                             </div>
                         </div>
@@ -388,6 +406,7 @@
     <script src="js/rune-equip.js"></script>
     <script src="js/build.js"></script>
     <script src="js/calc.js"></script>
+    <script src="js/simulate.js"></script>
     <script src="js/main.js"></script>
 </body>
 

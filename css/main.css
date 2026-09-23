@@ -1225,8 +1225,10 @@ html {
     background: #dc2626;
 }
 
+
 /* 장착 슬롯 안의 등급/타입 배지는 도감 카드용 기본 크기(0.75rem)보다
    한 단계 작게 써서, 이름이 2줄이 되어도 카드 높이 안에 여유 있게 들어가도록 합니다. */
+
 .equip-slot .companion-type-badge,
 .equip-slot .rune-type-badge,
 .equip-slot .skill-type-badge {
@@ -3334,6 +3336,7 @@ html {
     color: #92400e;
 }
 
+
 /* ==========================================================================
    18. 덱 구성 추천 - 성급 기준별(12성/25성/25성 10각) 딜량 비교
    ----------------------------------------------------------------------
@@ -3486,7 +3489,9 @@ html {
     gap: 1rem;
 }
 
+
 /* 데스크톱: 왼쪽에 세로로 쌓인 탭 버튼 열 */
+
 .section-side-tabs {
     flex: 0 0 8rem;
     display: flex;
@@ -3574,7 +3579,9 @@ html {
     white-space: normal;
 }
 
+
 /* "🗂 빌드로 저장" 섹션: 동료/룬/스킬 완료 여부 안내 문구 */
+
 .build-readiness-msg {
     margin: 0.5rem 0 0;
     font-size: 0.8125rem;
@@ -3588,6 +3595,61 @@ html {
 
 .build-readiness-msg:empty {
     display: none;
+}
+
+
+/* "📂 덱 구성 불러오기" 버튼 & 모달 */
+
+.build-load-btn {
+    margin-top: 0.75rem;
+}
+
+.build-load-modal-card {
+    max-width: 32rem;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+    .build-load-btn {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   20. 정밀 시뮬레이션 (쿨타임·버프·디버프·중첩)
+   ========================================================================== */
+
+.sim-section-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 0.25rem 0 1rem;
+}
+
+.deck-sim-title {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.sim-duration-field {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 16rem;
+}
+
+.sim-duration-field .form-label {
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .sim-duration-field {
+        max-width: none;
+    }
 }
 
 @media (max-width: 768px) {
