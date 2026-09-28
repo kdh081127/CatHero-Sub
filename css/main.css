@@ -284,6 +284,21 @@ html {
     color: #94a3b8;
 }
 
+.preset-item-desc {
+    font-size: 0.6875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-top: 0.125rem;
+}
+
+.preset-build-item .preset-item-info {
+    gap: 0.125rem;
+}
+
+.preset-build-unconfigured {
+    color: #b45309;
+}
+
 
 /* ==========================================================================
    4. 메인 바디 (사이드바 없이 단일 컬럼)
@@ -313,6 +328,34 @@ html {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+}
+
+
+/* 추천 프리셋 빌드: 2번 "동료" 섹션 맨 위에 리스트로 배치.
+   (예전에는 오른쪽 고정 사이드바였는데, 콘텐츠를 가리고 반응형 화면에서는
+   아예 안 보이는 문제가 있어 일반 섹션 안 리스트로 바꿨습니다.) */
+
+.preset-build-inline {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.preset-build-inline-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.preset-build-inline-title {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    color: #0f172a;
 }
 
 .info-card {
